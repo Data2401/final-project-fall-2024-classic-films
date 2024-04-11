@@ -15,6 +15,12 @@ report?
 - Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
 - Discuss your approach and analytic techniques and why it will address this problem.
 - Explain how your analysis will help the reader of the analysis
+
+Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
+Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
+The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown.
+
+
 ##Questions
 -which movies were top rated in appreciation / enjoyment?
 -Does genre 
