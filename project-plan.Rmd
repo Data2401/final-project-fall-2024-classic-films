@@ -1,0 +1,48 @@
+---
+title: "Rough Plan"
+author: "Rose Campos, Jessenia Contreras"
+date: "2024-04-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Introduction
+Provide an informative introduction that explains the problem statement you’re answering. Why should I be interested in reading your
+report?
+- Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
+- Discuss your approach and analytic techniques and why it will address this problem.
+- Explain how your analysis will help the reader of the analysis
+
+##Package Loaded
+- Explain why each package is loaded. 
+```{r cars}
+summary(cars)
+```
+
+##Data Preparation
+
+Source of the data is cited and hyperlinked, if possible.
+- Source data is thoroughly explained (who collected it, why was it collected, when was it collected, think about any peculiarities of the data
+such as missing values or quirks of collection.)
+- Data import and cleaning steps are explained in the text and follow a logical process. Tell me why you’re doing what you’re doing.
+- Once clean, show me the final data set in the most condensed form possible. (Do NOT print out a data frame with 200+ rows)
+- Provide a summary of the variables you’re interested in. Don’t just do str() or summary(), but provide me something like an explanation
+with a table or a nice summary paragraph
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+##Data Analysis
+- Uncover new information in the data that isn’t immediately apparent (such as: don’t just plot the data as is, but filter or group the data in
+different ways, create new variables, or join different data frames together to get new summaries)
+- Provide your findings in plots or tables. Display findings in different ways.
+- Graphs all have purpose and help tell your story. Make sure you have a graph that illustrates your primary point and that they are all
+appropriately formatted (plot and axis titles, legends if needed, appropriate plot types used)
+- Use tables effectively to perform comparisons, highlighting important features.
+- Your analysis should be thoroughly, yet concisely, explained. Make sure your insights and discoveries are highlighted, and easy to see and
+understand
