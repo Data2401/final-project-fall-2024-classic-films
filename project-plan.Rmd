@@ -9,19 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##Introduction
-Provide an informative introduction that explains the problem statement you’re answering. Why should I be interested in reading your
-report?
-- Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
-- Discuss your approach and analytic techniques and why it will address this problem.
-- Explain how your analysis will help the reader of the analysis
+## Introduction
 
 Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
+
 Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
 The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown.
 
 
-##Questions
+## Questions
 - Which movies were top rated in appreciation / enjoyment?
 - What factors relate to the appreciation / enjoyment rated?
 - Which genre have the highest appreciation rating? 
@@ -29,7 +25,7 @@ The data we used was gathered from a sample pool of 282 participants of which on
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
 
-##Data Preparation
+## Data Preparation INSTRUCTIONS
 
 Source of the data is cited and hyperlinked, if possible.
 - Source data is thoroughly explained (who collected it, why was it collected, when was it collected, think about any peculiarities of the data
@@ -43,15 +39,14 @@ with a table or a nice summary paragraph
 #Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
+library(dplyr) ##Loaded for computer issues
 
 ##Read in data and save it to variable raw_data
-raw_data <- read.csv(file = "Po")
+raw_data <- read.csv(file = "popular_film_data.csv")
+glimpse (raw_data)
 
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-##Data Analysis
+## Data Analysis INSTRUCTIONS
 - Uncover new information in the data that isn’t immediately apparent (such as: don’t just plot the data as is, but filter or group the data in
 different ways, create new variables, or join different data frames together to get new summaries)
 - Provide your findings in plots or tables. Display findings in different ways.
