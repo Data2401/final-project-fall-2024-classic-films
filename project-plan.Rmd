@@ -14,7 +14,6 @@ Provide an informative introduction that explains the problem statement you’re
 report?
 - Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
 - Discuss your approach and analytic techniques and why it will address this problem.
-
 - Explain how your analysis will help the reader of the analysis
 
 Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
@@ -23,18 +22,12 @@ The data we used was gathered from a sample pool of 282 participants of which on
 
 
 ##Questions
--which movies were top rated in appreciation / enjoyment?
--what factors relate to the appreciation / enjoyment rated?
--Which genre have the highest appreciation rating? 
--Which genre have the highest enjoyment rating? 
--Does the budget of the movie affect the rating?
--Does gender have an impact on how the movie was rated ?
-
-##Package Loaded
-- Explain why each package is loaded. 
-```{r cars}
-summary(cars)
-```
+- Which movies were top rated in appreciation / enjoyment?
+- What factors relate to the appreciation / enjoyment rated?
+- Which genre have the highest appreciation rating? 
+- Which genre have the highest enjoyment rating? 
+- Does the budget of the movie affect the rating?
+- Does gender have an impact on how the movie was rated ?
 
 ##Data Preparation
 
@@ -45,8 +38,15 @@ such as missing values or quirks of collection.)
 - Once clean, show me the final data set in the most condensed form possible. (Do NOT print out a data frame with 200+ rows)
 - Provide a summary of the variables you’re interested in. Don’t just do str() or summary(), but provide me something like an explanation
 with a table or a nice summary paragraph
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+```{r}
+#Packages loading to use
+library(tidyverse) ##Loaded for dplyr and to 'clean' data
+library(ggplot2) ##Loaded for plotting
+
+##Read in data and save it to variable raw_data
+raw_data <- read.csv(file = "Po")
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
