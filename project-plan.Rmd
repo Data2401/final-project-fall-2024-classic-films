@@ -14,7 +14,7 @@ Provide an informative introduction that explains the problem statement you’re
 report?
 - Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
 - Discuss your approach and analytic techniques and why it will address this problem.
-We are going to focus on how the app
+Our approach involves reducing variables to focus on our core inquiry. Utilizing graphical representations, we aim to vividly present our discoveries and leverage this data to inform our project's direction. Additionally, employing descriptive analysis will enable us to succinctly summarize our dataset, unveiling potential patterns. This strategic approach will facilitate clearer insights into our research questions
 
 - Explain how your analysis will help the reader of the analysis
 
