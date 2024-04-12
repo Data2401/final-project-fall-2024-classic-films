@@ -14,10 +14,15 @@ Provide an informative introduction that explains the problem statement you’re
 report?
 - Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
 - Discuss your approach and analytic techniques and why it will address this problem.
+
 - Explain how your analysis will help the reader of the analysis
 ##Questions
 -which movies were top rated in appreciation / enjoyment?
--Does genre 
+-what factors relate to the appreciation / enjoyment rated?
+-Which genre have the highest appreciation rating? 
+-Which genre have the highest enjoyment rating? 
+-Does the budget of the movie affect the rating?
+-Does gender have an impact on how the movie was rated ?
 
 ##Package Loaded
 - Explain why each package is loaded. 
