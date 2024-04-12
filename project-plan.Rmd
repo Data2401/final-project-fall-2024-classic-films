@@ -14,6 +14,7 @@ Provide an informative introduction that explains the problem statement you’re
 report?
 - Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
 - Discuss your approach and analytic techniques and why it will address this problem.
+We are going to focus on how the app
 
 - Explain how your analysis will help the reader of the analysis
 
