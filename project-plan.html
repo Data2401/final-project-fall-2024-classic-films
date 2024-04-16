@@ -379,15 +379,8 @@ at <a href="https://data.world/robertjoellewis/enjoyment-versus-appreciation-rat
 </div>
 <div id="data-preparation-instructions" class="section level2">
 <h2>Data Preparation INSTRUCTIONS</h2>
-<ul>
-<li>Data import and cleaning steps are explained in the text and follow
-a logical process. Tell me why you’re doing what you’re doing.</li>
-<li>Once clean, show me the final data set in the most condensed form
-possible. (Do NOT print out a data frame with 200+ rows)</li>
-<li>Provide a summary of the variables you’re interested in. Don’t just
-do str() or summary(), but provide me something like an explanation with
-a table or a nice summary paragraph</li>
-</ul>
+<p>Below, we load in the packages we’ll be using to analyse our
+data.</p>
 <pre class="r"><code>#Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
@@ -401,9 +394,11 @@ library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 <pre class="r"><code>library(ggplot2) ##Loaded for plotting
-library(dplyr) ##Loaded for computer issues
-
-##Read in data and save it to variable raw_data
+library(dplyr) ##Loaded for computer issues</code></pre>
+<p>Now, we’ll read in the data from its .CSV file into our project and
+save it to the variable raw_data. After taking a look at it, we can
+begin analysing it.</p>
+<pre class="r"><code>##Read in data and save it to variable raw_data
 raw_data &lt;- read.csv(file = &quot;popular_film_data.csv&quot;)
 glimpse (raw_data)</code></pre>
 <pre><code>## Rows: 50
@@ -493,6 +488,30 @@ important features.</li>
 sure your insights and discoveries are highlighted, and easy to see and
 understand</li>
 </ul>
+<p>We’ll start by learning about our data has. What is the year range of
+it? How many films make up our data? How many films of each genere are
+there?</p>
+<pre class="r"><code>#What is the release year range of the films in our dataset?
+range(raw_data$Year)</code></pre>
+<pre><code>## [1] 1942 2013</code></pre>
+<pre class="r"><code>#raw_data|&gt;group_by(genre)</code></pre>
+<p>Does the data contain multiple films per year? Is so, what is the
+count for each year?</p>
+<pre class="r"><code> raw_data|&gt;group_by(Year) |&gt; summarise(Movie_Count = n()) |&gt; arrange(desc(Movie_Count))</code></pre>
+<pre><code>## # A tibble: 30 × 2
+##     Year Movie_Count
+##    &lt;int&gt;       &lt;int&gt;
+##  1  1994           4
+##  2  2010           4
+##  3  2012           4
+##  4  1999           3
+##  5  2011           3
+##  6  1993           2
+##  7  1995           2
+##  8  2001           2
+##  9  2002           2
+## 10  2003           2
+## # ℹ 20 more rows</code></pre>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>

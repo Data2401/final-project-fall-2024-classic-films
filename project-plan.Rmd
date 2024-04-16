@@ -11,15 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Introduction
-Provide an informative introduction that explains the problem statement you’re answering. Why should I be interested in reading your
-report?
-- Provide a short explanation of how you’re addressing this problem statement, what data are you using, what methods are you using?
-- Discuss your approach and analytic techniques and why it will address this problem.
-
-Our approach involves reducing variables to focus on our core inquiry. Utilizing graphical representations, we aim to vividly present our discoveries and leverage this data to inform our project's direction. Additionally, employing descriptive analysis will enable us to succinctly summarize our dataset, unveiling potential patterns. This strategic approach will facilitate clearer insights into our research questions
-
-
-- Explain how your analysis will help the reader of the analysis
 
 Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
 Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
@@ -27,22 +18,20 @@ The data we used was gathered from a sample pool of 282 participants of which on
 
 ## Data Preparation INSTRUCTIONS
 
-- Data import and cleaning steps are explained in the text and follow a logical process. Tell me why you’re doing what you’re doing.
-- Once clean, show me the final data set in the most condensed form possible. (Do NOT print out a data frame with 200+ rows)
-- Provide a summary of the variables you’re interested in. Don’t just do str() or summary(), but provide me something like an explanation
-with a table or a nice summary paragraph
-
+Below, we load in the packages we'll be using to analyse our data.  
 ```{r}
 #Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
-
+```
+Now, we'll read in the data from its .CSV file into our project and save it to the variable raw_data. After taking a look at it, we can begin analysing it. 
+```{r}
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
 glimpse (raw_data)
-
 ```
+
 
 ## Data Analysis INSTRUCTIONS
 
@@ -55,6 +44,19 @@ appropriately formatted (plot and axis titles, legends if needed, appropriate pl
 - Your analysis should be thoroughly, yet concisely, explained. Make sure your insights and discoveries are highlighted, and easy to see and
 understand
 
+We'll start by learning about our data has. What is the year range of it? How many films make up our data? How many films of each genere are there? 
+```{r}
+#What is the release year range of the films in our dataset?
+range(raw_data$Year)
+
+#raw_data|>group_by(genre)
+```
+Does the data contain multiple films per year? Is so, what is the count for each year? 
+```{r}
+ raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
+```
+
+
 ## Questions
 
 - Which movies were top rated in appreciation / enjoyment?
@@ -63,3 +65,4 @@ understand
 - Which genre have the highest enjoyment rating? 
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
+                         
