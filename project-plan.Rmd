@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
 Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
-The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown. The remaining percentage is filled by Pacific Islanders and other ethnicity. This data was collected by attendees of the University of Texas at Austin in 2017 for a *Journal of Media Psychology* publication. The goal of the original source was to determine how enjoyment and appreciation could impact viewers aggregate appraisals. The data used is available for download and review at [Data.World](https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films).
+The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown. The remaining percentage is filled by Pacific Islanders and other ethnicity. This data was collected by attendees of the University of Texas at Austin in 2017 for a Journal of Media Psychology publication. The goal of the original source was to determine how enjoyment and appreciation could impact viewers aggregate appraisals. The data used is available for download and review at [Data.World](https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films).
 
 ## Data Preparation INSTRUCTIONS
 
@@ -27,15 +27,28 @@ library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
 ```
 
-Now, we'll read in the data from its .CSV file into our project and save it to the variable raw_data. After taking a look at it, we can begin analysing it. 
+Now, we'll read in the data from its .CSV file into our project and save it to the variable **raw_data**. 
 
 ```{r}
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
 glimpse (raw_data)
-
-raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget)
+```
+Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. 
+```{r}
+#To remove "$" and "," from InflatedBudget
+raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget) 
 raw_data$InflatedBudget <-  as.numeric(gsub(",","", raw_data$InflatedBudget))
+
+#To remove "$" and "," from InflatedGross
+raw_data$InflatedGross <-  gsub("\\$","", raw_data$InflatedGross) 
+raw_data$InflatedGross <-  as.numeric(gsub(",","", raw_data$InflatedGross))
+
+#To remove "$" and "," from TotalGross
+raw_data$TotalGross <-  gsub("\\$","", raw_data$TotalGross) 
+raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
+
+#To View our now changed data. 
 glimpse (raw_data)
 ```
 
@@ -72,4 +85,4 @@ Does the data contain multiple films per year? Is so, what is the count for each
 - Which genre have the highest enjoyment rating? 
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
-                         
+Meeting Notes: Create columns for Ratings

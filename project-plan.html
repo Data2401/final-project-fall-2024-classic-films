@@ -371,11 +371,10 @@ with the median age range being 22.25. The ethnicity distribution was
 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African
 American, and ~12% Unknown. The remaining percentage is filled by
 Pacific Islanders and other ethnicity. This data was collected by
-attendees of the University of Texas at Austin in 2017 for a <em>Journal
-of Media Psychology</em> publication. The goal of the original source
-was to determine how enjoyment and appreciation could impact viewers
-aggregate appraisals. The data used is available for download and review
-at <a href="https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films">Data.World</a>.</p>
+attendees of the University of Texas at Austin in 2017 for a Journal of
+Media Psychology publication. The goal of the original source was to
+determine how enjoyment and appreciation could impact viewers aggregate
+appraisals. The data used is available for download and review at <a href="https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films">Data.World</a>.</p>
 </div>
 <div id="data-preparation-instructions" class="section level2">
 <h2>Data Preparation INSTRUCTIONS</h2>
@@ -396,8 +395,7 @@ library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
 <pre class="r"><code>library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues</code></pre>
 <p>Now, we’ll read in the data from its .CSV file into our project and
-save it to the variable raw_data. After taking a look at it, we can
-begin analysing it.</p>
+save it to the variable <strong>raw_data</strong>.</p>
 <pre class="r"><code>##Read in data and save it to variable raw_data
 raw_data &lt;- read.csv(file = &quot;popular_film_data.csv&quot;)
 glimpse (raw_data)</code></pre>
@@ -468,8 +466,24 @@ glimpse (raw_data)</code></pre>
 ## $ PurityViceratio      &lt;dbl&gt; 0.000215, 0.001190, 0.001499, 0.000604, 0.003688,…
 ## $ MoralityGeneral      &lt;int&gt; 14, 59, 14, 104, 30, 48, 35, 25, 13, 32, 6, 40, 3…
 ## $ MoralityGeneralratio &lt;dbl&gt; 0.003014, 0.004679, 0.006993, 0.006282, 0.006509,…</code></pre>
-<pre class="r"><code>raw_data$InflatedBudget &lt;-  gsub(&quot;\\$&quot;,&quot;&quot;, raw_data$InflatedBudget)
+<p>Some of the data contained in the the variables
+<em>InflatedBudget</em>, <em>InflatedGross</em>, and <em>TotalGross</em>
+have symbols such as “$” and and “,”. These symbols cause the the
+information in them to be read as characters rather then as integers. We
+use gsub to remove these symbols.</p>
+<pre class="r"><code>#To remove &quot;$&quot; and &quot;,&quot; from InflatedBudget
+raw_data$InflatedBudget &lt;-  gsub(&quot;\\$&quot;,&quot;&quot;, raw_data$InflatedBudget) 
 raw_data$InflatedBudget &lt;-  as.numeric(gsub(&quot;,&quot;,&quot;&quot;, raw_data$InflatedBudget))
+
+#To remove &quot;$&quot; and &quot;,&quot; from InflatedGross
+raw_data$InflatedGross &lt;-  gsub(&quot;\\$&quot;,&quot;&quot;, raw_data$InflatedGross) 
+raw_data$InflatedGross &lt;-  as.numeric(gsub(&quot;,&quot;,&quot;&quot;, raw_data$InflatedGross))
+
+#To remove &quot;$&quot; and &quot;,&quot; from TotalGross
+raw_data$TotalGross &lt;-  gsub(&quot;\\$&quot;,&quot;&quot;, raw_data$TotalGross) 
+raw_data$TotalGross &lt;-  as.numeric(gsub(&quot;,&quot;,&quot;&quot;, raw_data$TotalGross))
+
+#To View our now changed data. 
 glimpse (raw_data)</code></pre>
 <pre><code>## Rows: 50
 ## Columns: 65
@@ -482,8 +496,8 @@ glimpse (raw_data)</code></pre>
 ## $ Boxofficemojo_A      &lt;int&gt; 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…
 ## $ Year                 &lt;int&gt; 1994, 1972, 1974, 1994, 1966, 2008, 1957, 1993, 2…
 ## $ InflatedBudget       &lt;dbl&gt; 38705260, 32966408, 60592133, 1238568, 8501703, 1…
-## $ TotalGross           &lt;chr&gt; &quot;$28,341,469.00&quot;, &quot;$245,066,411.00&quot;, &quot;$47,542,841…
-## $ InflatedGross        &lt;chr&gt; &quot;$43,878,557.13&quot;, &quot;$1,346,493,234.29&quot;, &quot;$221,594,…
+## $ TotalGross           &lt;dbl&gt; 28341469, 245066411, 47542841, 213928762, 2510000…
+## $ InflatedGross        &lt;dbl&gt; 43878557, 1346493234, 221594012, 331206735, 17782…
 ## $ V15                  &lt;chr&gt; &quot;Shawshank&quot;, &quot;Godfather&quot;, &quot;Godfather p 2&quot;, &quot;Pulp …
 ## $ Check_enj_label      &lt;chr&gt; &quot;Shawshank_enj&quot;, &quot;Godfather_enj&quot;, &quot;Godfather p 2_…
 ## $ Proportion_male      &lt;dbl&gt; 0.38, 0.38, 0.42, 0.40, 0.44, 0.31, 0.33, 0.32, 0…
@@ -591,7 +605,8 @@ count for each year?</p>
 <li>Which genre have the highest appreciation rating?</li>
 <li>Which genre have the highest enjoyment rating?</li>
 <li>Does the budget of the movie affect the rating?</li>
-<li>Does gender have an impact on how the movie was rated ?</li>
+<li>Does gender have an impact on how the movie was rated ? Meeting
+Notes: Create columns for Ratings</li>
 </ul>
 </div>
 
