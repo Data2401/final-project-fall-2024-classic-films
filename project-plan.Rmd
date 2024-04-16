@@ -19,16 +19,23 @@ The data we used was gathered from a sample pool of 282 participants of which on
 ## Data Preparation INSTRUCTIONS
 
 Below, we load in the packages we'll be using to analyse our data.  
+
 ```{r}
 #Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
 ```
+
 Now, we'll read in the data from its .CSV file into our project and save it to the variable raw_data. After taking a look at it, we can begin analysing it. 
+
 ```{r}
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
+glimpse (raw_data)
+
+raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget)
+raw_data$InflatedBudget <-  as.numeric(gsub(",","", raw_data$InflatedBudget))
 glimpse (raw_data)
 ```
 
