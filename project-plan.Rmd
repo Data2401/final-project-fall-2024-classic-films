@@ -75,7 +75,17 @@ Does the data contain multiple films per year? Is so, what is the count for each
 ```{r}
  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 ```
+The above is arranged by to be descending by amount of movies present of each year but it is difficult to see this overall. To give visibility to this distribution we create a plot based on the above coding. First we save it to a variable. 
 
+```{r}
+#Storing the code to the "count_movieby_year" variable. 
+count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
+#ggplot(raw_data, aes(x = Year, y = count_movieby_year)) + geom_col()
+
+
+
+
+```
 
 ## Questions
 

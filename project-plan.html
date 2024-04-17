@@ -596,6 +596,13 @@ count for each year?</p>
 ##  9  2002           2
 ## 10  2003           2
 ## # ℹ 20 more rows</code></pre>
+<p>The above is arranged by to be descending by amount of movies present
+of each year but it is difficult to see this overall. To give visibility
+to this distribution we create a plot based on the above coding. First
+we save it to a variable.</p>
+<pre class="r"><code>#Storing the code to the &quot;count_movieby_year&quot; variable. 
+count_movieby_year &lt;-  raw_data|&gt;group_by(Year) |&gt; summarise(Movie_Count = n()) |&gt; arrange(desc(Movie_Count))
+#ggplot(raw_data, aes(x = Year, y = count_movieby_year)) + geom_col()</code></pre>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
