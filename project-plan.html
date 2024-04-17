@@ -382,6 +382,7 @@ appraisals. The data used is available for download and review at <a href="https
 data.</p>
 <pre class="r"><code>#Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -603,6 +604,27 @@ we save it to a variable.</p>
 <pre class="r"><code>#Storing the code to the &quot;count_movieby_year&quot; variable. 
 count_movieby_year &lt;-  raw_data|&gt;group_by(Year) |&gt; summarise(Movie_Count = n()) |&gt; arrange(desc(Movie_Count))
 #ggplot(raw_data, aes(x = Year, y = count_movieby_year)) + geom_col()</code></pre>
+<p>Next, we wanted to find the average budget for each year. We wanted
+to see if the year had an impact on the budget.</p>
+<pre class="r"><code>avg_year_budget &lt;- raw_data |&gt; group_by( Year) |&gt; summarize(average_yearly_budget = mean(InflatedBudget))
+avg_year_budget</code></pre>
+<pre><code>## # A tibble: 30 × 2
+##     Year average_yearly_budget
+##    &lt;int&gt;                 &lt;dbl&gt;
+##  1  1942             13399819.
+##  2  1954             17098709.
+##  3  1957              2857039.
+##  4  1966              8501703.
+##  5  1968             33037836.
+##  6  1972             32966408.
+##  7  1974             60592133.
+##  8  1975             18797531.
+##  9  1977             41706673.
+## 10  1980             50118997.
+## # ℹ 20 more rows</code></pre>
+<pre class="r"><code># or we can see if there is a trend in budget by the years
+# we can use this code
+#raw_data |&gt; group_by(Year)|&gt; summarise(InfatedBudget = n()) |&gt; ggplot(aes(year,InflatedBudget)) +geom_point() + geom_smooth()</code></pre>
 </div>
 <div id="questions" class="section level2">
 <h2>Questions</h2>
