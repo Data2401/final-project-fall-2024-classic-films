@@ -52,7 +52,14 @@ raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
 #To View our now changed data. 
 glimpse (raw_data)
 ```
-Now, we also see that our data has a 
+Now, we also see that our data has a *Proportion_male* column. Lets mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
+
+```{r}
+raw_data |> mutate (Proportion_female = (1 - Proportion_male))
+
+#To view our data with the new variable.
+glimpse(Proportion_female)
+```
 
 ## Data Analysis INSTRUCTIONS
 
@@ -107,7 +114,7 @@ raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,Inflat
 - Which genre have the highest enjoyment rating? 
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
-Meeting Notes: Create columns for Ratings
+Meeting Notes: Create columns for Ratings??
 which genre cost more to produce?
 which genre has the highest income? Which sex contributes more to that income. 
 
