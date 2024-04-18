@@ -25,6 +25,7 @@ Below, we load in the packages we'll be using to analyse our data.
 library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
+
 ```
 
 Now, we'll read in the data from its .CSV file into our project and save it to the variable **raw_data**. 
@@ -51,7 +52,7 @@ raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
 #To View our now changed data. 
 glimpse (raw_data)
 ```
-
+Now, we also see that our data has a 
 
 ## Data Analysis INSTRUCTIONS
 
@@ -81,12 +82,13 @@ The above is arranged by to be descending by amount of movies present of each ye
 ```{r}
 #Storing the code to the "count_movieby_year" variable. 
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
-#ggplot(raw_data, aes(x = Year, y = count_movieby_year)) + geom_col()
+ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col()
 
-
+#Storing the code to the "count_movieby_year" variable. 
 
 
 ```
+Given that distribution of films is ___ there are limitations ____.
 
 Next, we wanted to find the average budget for each year. We wanted to see if the year had an impact on the budget. 
 ```{r}
@@ -95,7 +97,7 @@ avg_year_budget
 
 # or we can see if there is a trend in budget by the years
 # we can use this code
-#raw_data |> group_by(Year)|> summarise(InfatedBudget = n()) |> ggplot(aes(year,InflatedBudget)) +geom_point() + geom_smooth()
+raw_data |> group_by(Year)|> summarise(InflatedBudget = n()) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
 ```
 ## Questions
 
@@ -106,3 +108,6 @@ avg_year_budget
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
 Meeting Notes: Create columns for Ratings
+which genre cost more to produce?
+which genre has the highest income? Which sex contributes more to that income. 
+
