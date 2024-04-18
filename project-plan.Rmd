@@ -55,10 +55,10 @@ glimpse (raw_data)
 Now, we also see that our data has a *Proportion_male* column. Lets mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
 
 ```{r}
-raw_data |> mutate (Proportion_female = (1 - Proportion_male))
+raw_data<- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
 
 #To view our data with the new variable.
-glimpse(Proportion_female)
+glimpse(raw_data)#Change to proportion_female so that the new variable is 
 ```
 
 ## Data Analysis INSTRUCTIONS
