@@ -97,7 +97,7 @@ avg_year_budget
 
 # or we can see if there is a trend in budget by the years
 # we can use this code
-raw_data |> group_by(Year)|> summarise(InflatedBudget = n()) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
+raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
 ```
 ## Questions
 
