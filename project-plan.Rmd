@@ -119,6 +119,13 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 
 ```
+
+```{r}
+#created a new data for genre but not sure if it was correct way to combat the genre question
+genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
+
+```
+
 ## Questions
 
 - Which movies were top rated in appreciation / enjoyment?
