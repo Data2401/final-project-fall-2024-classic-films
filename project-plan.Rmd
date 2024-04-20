@@ -127,7 +127,7 @@ BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH.
 Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films where.
 
 ```{r}
-
+#summarise (max(raw_data$InflatedBudget)
 ```
 
 And what films made the most and least grossing? What genres where these films?
