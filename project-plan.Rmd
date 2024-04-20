@@ -112,7 +112,7 @@ raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,Inflat
 
 It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
 
-```{r InflatedGross and InflatedBudged Comparison}
+```{r}
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
 
 raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget, color = "red")) + geom_point(aes(y=InflatedGross, color = "blue")) + geom_smooth(aes(y=InflatedBudget, color = "red")) + geom_smooth(aes(y=InflatedGross, color = "blue"))
@@ -120,10 +120,40 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 ```
 
+BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH. 
+
+###Genres
+
+Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films where.
+
+```{r}
+
+```
+
+And what films made the most and least grossing? What genres where these films?
+
+```{r}
+
+```
+We know the answers to these questions for indivudual film entries - now we'll answer them for every genre category. 
+
+```{r}
+#Over all, what category cost more to produce on average? How much did that category produce in grossing? 
+
+#Over all, what genre cost more to produce on average? How much did that category produce in grossings?
+
+
+```
+For transparencys sake, its also important to note how many films under each genre make up the dataset.    
+
 ```{r}
 #created a new data for genre but not sure if it was correct way to combat the genre question
 genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
-
+genre
+```
+###T
+```{r}
+#popularity
 ```
 
 ## Questions
@@ -134,8 +164,9 @@ genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Bi
 - Which genre have the highest enjoyment rating? 
 - Does the budget of the movie affect the rating?
 - Does gender have an impact on how the movie was rated ?
-Meeting Notes: Create columns for Ratings
+Meeting Notes: Create columns for Ratings????
 which genre cost more to produce?
 which genre has the highest income? Which sex contributes more to that income. Mutate each film to multiply ratio by income. Then Summarize by genre = true. Repeat for male so you can see both contributions. 
+**We still have the classical-ness and popularity to mess around with. 
 
 
