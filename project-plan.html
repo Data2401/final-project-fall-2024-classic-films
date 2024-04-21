@@ -382,7 +382,6 @@ appraisals. The data used is available for download and review at <a href="https
 data.</p>
 <pre class="r"><code>#Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -751,8 +750,12 @@ will be use later to compare which movie is the best.</p>
 <p>BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH.</p>
 <p>###Genres</p>
 <p>Is there a specific genre that costs more to produce? First, we’ll
-see what the most and least expensive films where.</p>
-<pre class="r"><code>#summarise (max(raw_data$InflatedBudget)</code></pre>
+see what the most and least expensive films to produce where.</p>
+<pre class="r"><code>#bool&lt;- raw_data |&gt; c( Crime!=0, Drama!=0, Western!=0, Biography!=0, History!=0, Adventure!=0, Fantasy!=0, Mystery!=0, SciFi!=0, Romance!=0, Thriller!=0, War!=0, Family!=0, Animation!=0, Comedy!=0)
+
+#raw_data |&gt; slice_max(InflatedBudget) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross, raw_data[bool])
+
+#raw_data |&gt; filter(InflatedBudget == max(InflatedBudget)) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross, contains&quot;m&quot;)</code></pre>
 <p>And what films made the most and least grossing? What genres where
 these films?</p>
 <p>We know the answers to these questions for indivudual film entries -
@@ -928,6 +931,28 @@ income. Mutate each film to multiply ratio by income. Then Summarize by
 genre = true. Repeat for male so you can see both contributions. **We
 still have the classical-ness and popularity to mess around with.</li>
 </ul>
+<pre class="r"><code>library(dplyr)
+
+data &lt;- data.frame(
+  MovieName = c(&quot;Movie1&quot;, &quot;Movie2&quot;, &quot;Movie3&quot;),
+  Genre1 = c(0, 1, 1),
+  Genre2 = c(1, 0, 0),
+  Genre3 = c(1, 0, 1),
+  MovieBudget = c(2500000, 3430000, 1240000)
+)
+
+# Finding the movie with the highest budget
+result &lt;- data %&gt;%
+  filter(MovieBudget == max(MovieBudget)) %&gt;%
+  select(MovieName, MovieBudget, contains(&quot;Genre&quot;)) %&gt;%
+  # Filtering only the genres that are 1 for the movie
+  mutate(across(starts_with(&quot;Genre&quot;), ~ifelse(. == 1, 1, NA_integer_))) %&gt;%
+  # Remove NA columns, keeping only genres with 1
+  select_if(~!all(is.na(.)))
+
+print(result)</code></pre>
+<pre><code>##   MovieName MovieBudget Genre1
+## 1    Movie2     3430000      1</code></pre>
 </div>
 
 
