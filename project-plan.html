@@ -748,11 +748,133 @@ will be use later to compare which movie is the best.</p>
 ## 8          StarWarsI_Classic 1999    1419296470
 ## 9       LRReturnKing_Classic 2003    1411841983
 ## 10 HPDeathlyHallows2_Classic 2011    1390228199</code></pre>
+<p>BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH.</p>
+<p>###Genres</p>
+<p>Is there a specific genre that costs more to produce? First, we’ll
+see what the most and least expensive films where.</p>
+<pre class="r"><code>#summarise (max(raw_data$InflatedBudget)</code></pre>
+<p>And what films made the most and least grossing? What genres where
+these films?</p>
+<p>We know the answers to these questions for indivudual film entries -
+now we’ll answer them for every genre category.</p>
+<pre class="r"><code>#Over all, what category cost more to produce on average? How much did that category produce in grossing? 
+
+#Over all, what genre cost more to produce on average? How much did that category produce in grossings?</code></pre>
+<p>For transparencys sake, its also important to note how many films
+under each genre make up the dataset.</p>
 <pre class="r"><code>#created a new data for genre but not sure if it was correct way to combat the genre question
+
 genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,InflatedBudget,InflatedGross)))
 
 
-#genre |&gt; group_by(c(Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy)) |&gt; summarise(genre_count = n())</code></pre>
+#genre |&gt; group_by(c(Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy)) |&gt; summarise(genre_count = n())
+
+genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
+genre</code></pre>
+<pre><code>##                          FilmName Crime Drama Western Action Biography History
+## 1               Shawshank_Classic     1     1       0      0         0       0
+## 2               Godfather_Classic     1     1       0      0         0       0
+## 3              Godfather2_classic     1     1       0      0         0       0
+## 4             PulpFiction_Classic     1     1       0      0         0       0
+## 5             GoodBadUgly_Classic     0     0       1      0         0       0
+## 6              DarkKnight_Classic     1     1       0      1         0       0
+## 7              12AngryMen_Classic     1     1       0      0         0       0
+## 8          SchindlersList_Classic     0     1       0      0         1       1
+## 9            LRReturnKing_Classic     0     0       0      0         0       0
+## 10              FightClub_Classic     0     1       0      0         0       0
+## 11              StarWars5_Classic     0     0       0      1         0       0
+## 12       LRFellowshipRing_Classic     0     0       0      0         0       0
+## 13            CuckoosNest_Classic     0     1       0      0         0       0
+## 14             Goodfellas_Classic     1     1       0      0         1       0
+## 15           SevenSamurai_Classic     0     1       0      0         0       0
+## 16              Inception_Classic     0     0       0      1         0       0
+## 17               StarWars_Classic     0     0       0      1         0       0
+## 18            ForrestGump_Classic     0     1       0      0         0       0
+## 19              TheMatrix_Classic     0     0       0      1         0       0
+## 20            LRTwoTowers_Classic     0     0       0      0         0       0
+## 21              CityofGod_Classic     1     1       0      0         0       0
+## 22          OnceUponaTime_Classic     0     0       1      0         0       0
+## 23           SilenceLambs_Classic     1     1       0      0         0       0
+## 24                  Se7en_Classic     1     1       0      0         0       0
+## 25             Casablanca_Classic     0     1       0      0         0       0
+## 26          UsualSuspects_Classic     1     1       0      0         0       0
+## 27    RaidersoftheLostArk_Classic     0     0       0      1         0       0
+## 28                 Avatar_Classic     0     0       0      1         0       0
+## 29                Titanic_Classic     0     1       0      0         0       0
+## 30            TheAvengers_Classic     0     0       0      1         0       0
+## 31      HPDeathlyHallows2_Classic     0     1       0      0         0       0
+## 32               IronMan3_Classic     0     0       0      1         0       0
+## 33          Transformers3_Classic     0     0       0      1         0       0
+## 34                Skyfall_Classic     0     0       0      1         0       0
+## 35        DarkKnightRises_Classic     0     0       0      1         0       0
+## 36   PCA\xcaDeadMansChest_Classic     0     0       0      1         0       0
+## 37              ToyStory3_Classic     0     0       0      0         0       0
+## 38 PCA\xcaOnStrangerTides_Classic     0     0       0      1         0       0
+## 39           JurassicPark_Classic     0     0       0      0         0       0
+## 40              StarWarsI_Classic     0     0       0      1         0       0
+## 41        AliceWonderland_Classic     0     0       0      0         0       0
+## 42              TheHobbit_Classic     0     0       0      0         0       0
+## 43               LionKing_Classic     0     1       0      0         0       0
+## 44       HPSorcerersStone_Classic     0     0       0      0         0       0
+## 45  HP\xcaDeathlyHallows1_Classic     0     0       0      0         0       0
+## 46    HPOrderofthePhoenix_Classic     0     0       0      0         0       0
+## 47      HPHalfBloodPrince_Classic     0     0       0      0         0       0
+## 48                 Shrek2_Classic     0     0       0      0         0       0
+## 49          PCAtWorldsEnd_Classic     0     0       0      1         0       0
+## 50            FindingNemo_Classic     0     0       0      0         0       0
+##    Adventure Fantasy Mystery SciFi Romance Thriller War Family Animation Comedy
+## 1          0       0       0     0       0        0   0      0         0      0
+## 2          0       0       0     0       0        0   0      0         0      0
+## 3          0       0       0     0       0        0   0      0         0      0
+## 4          0       0       0     0       0        0   0      0         0      0
+## 5          0       0       0     0       0        0   0      0         0      0
+## 6          0       0       0     0       0        0   0      0         0      0
+## 7          0       0       0     0       0        0   0      0         0      0
+## 8          0       0       0     0       0        0   0      0         0      0
+## 9          1       1       0     0       0        0   0      0         0      0
+## 10         0       0       0     0       0        0   0      0         0      0
+## 11         1       1       0     0       0        0   0      0         0      0
+## 12         1       1       0     0       0        0   0      0         0      0
+## 13         0       0       0     0       0        0   0      0         0      0
+## 14         0       0       0     0       0        0   0      0         0      0
+## 15         0       0       0     0       0        0   0      0         0      0
+## 16         0       0       1     1       0        0   0      0         0      0
+## 17         1       1       0     0       0        0   0      0         0      0
+## 18         0       0       0     0       1        0   0      0         0      0
+## 19         0       0       0     1       0        0   0      0         0      0
+## 20         1       1       0     0       0        0   0      0         0      0
+## 21         0       0       0     0       0        0   0      0         0      0
+## 22         0       0       0     0       0        0   0      0         0      0
+## 23         0       0       0     0       0        1   0      0         0      0
+## 24         0       0       1     0       0        0   0      0         0      0
+## 25         0       0       0     0       1        0   1      0         0      0
+## 26         0       0       0     0       0        1   0      0         0      0
+## 27         1       0       0     0       0        0   0      0         0      0
+## 28         1       1       0     0       0        0   0      0         0      0
+## 29         0       0       0     0       1        0   0      0         0      0
+## 30         1       0       0     1       0        0   0      0         0      0
+## 31         1       1       0     0       0        0   0      0         0      0
+## 32         1       0       0     1       0        0   0      0         0      0
+## 33         1       0       0     1       0        0   0      0         0      0
+## 34         1       0       0     0       0        1   0      0         0      0
+## 35         0       0       0     0       0        1   0      0         0      0
+## 36         1       1       0     0       0        0   0      0         0      0
+## 37         1       0       0     0       0        0   0      0         1      1
+## 38         1       1       0     0       0        0   0      0         0      0
+## 39         1       0       0     1       0        1   0      0         0      0
+## 40         1       1       0     0       0        0   0      0         0      0
+## 41         1       1       0     0       0        0   0      1         0      0
+## 42         1       1       0     0       0        0   0      0         0      0
+## 43         1       0       0     0       0        0   0      0         1      0
+## 44         1       1       0     0       0        0   0      1         0      0
+## 45         1       1       0     0       0        0   0      1         0      0
+## 46         1       1       0     0       0        0   0      1         0      0
+## 47         1       1       0     0       0        0   0      1         0      0
+## 48         1       0       0     0       0        0   0      1         0      1
+## 49         1       1       0     0       0        0   0      0         0      0
+## 50         1       0       0     0       0        0   0      0         1      1</code></pre>
+<p>###T</p>
+<pre class="r"><code>#popularity</code></pre>
 <p>Let see what movie is actually the best.</p>
 <pre class="r"><code>raw_data |&gt; slice_max(Appreciation, n = 10)|&gt; select(FilmName,Appreciation, Enjoyment)</code></pre>
 <pre><code>##                  FilmName Appreciation Enjoyment
@@ -800,10 +922,11 @@ genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Acti
 <li>Which genre have the highest enjoyment rating?</li>
 <li>Does the budget of the movie affect the rating?</li>
 <li>Does gender have an impact on how the movie was rated ? Meeting
-Notes: Create columns for Ratings which genre cost more to produce?
+Notes: Create columns for Ratings???? which genre cost more to produce?
 which genre has the highest income? Which sex contributes more to that
 income. Mutate each film to multiply ratio by income. Then Summarize by
-genre = true. Repeat for male so you can see both contributions.</li>
+genre = true. Repeat for male so you can see both contributions. **We
+still have the classical-ness and popularity to mess around with.</li>
 </ul>
 </div>
 
