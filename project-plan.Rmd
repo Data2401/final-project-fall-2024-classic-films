@@ -119,12 +119,30 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 
 ```
+we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
+Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
+
+```{r}
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year, InflatedGross)
+```
+
 
 ```{r}
 #created a new data for genre but not sure if it was correct way to combat the genre question
-genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
+genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,InflatedBudget,InflatedGross)))
 
+
+#genre |> group_by(c(Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy)) |> summarise(genre_count = n())
 ```
+Let see what movie is actually the best. 
+```{r}
+raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
+
+raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Appreciation)
+
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
+```
+
 
 ## Questions
 
