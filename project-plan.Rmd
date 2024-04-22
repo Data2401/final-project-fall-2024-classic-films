@@ -136,10 +136,17 @@ Is there a specific genre that costs more to produce? First, we'll see what the 
 ```{r}
 #bool<- raw_data |> c( Crime!=0, Drama!=0, Western!=0, Biography!=0, History!=0, Adventure!=0, Fantasy!=0, Mystery!=0, SciFi!=0, Romance!=0, Thriller!=0, War!=0, Family!=0, Animation!=0, Comedy!=0)
 
-#raw_data |> slice_max(InflatedBudget) |> select(FilmName, Year, InflatedBudget, InflatedGross, raw_data[bool])
+#raw_data |> slice_max(InflatedBudget) |> select(FilmName, Year, InflatedBudget, InflatedGross) |> select ()
 
 #raw_data |> filter(InflatedBudget == max(InflatedBudget)) |> select(FilmName, Year, InflatedBudget, InflatedGross, contains"m")
+
+#Attempting to create a modified data frame for genreFAILED 
+#LINK[https://www.geeksforgeeks.org/how-to-filter-r-dataframe-by-values-in-a-column/#]
+#genreframe<- raw_data[raw_data$col24==1]
+#genreframe
+#pivot_longer(raw_data, -c(FilmName, InflatedBudget)) |> slice_max(InflatedBudget) |> filter(value == 1) |> pivot_wider()
 ```
+
 
 And what films made the most and least grossing? What genres where these films?
 
@@ -197,25 +204,5 @@ which genre has the highest income? Which sex contributes more to that income. M
 **We still have the classical-ness and popularity to mess around with. 
 
 
-```{r}
-library(dplyr)
 
-data <- data.frame(
-  MovieName = c("Movie1", "Movie2", "Movie3"),
-  Genre1 = c(0, 1, 1),
-  Genre2 = c(1, 0, 0),
-  Genre3 = c(1, 0, 1),
-  MovieBudget = c(2500000, 3430000, 1240000)
-)
-
-# Finding the movie with the highest budget
-result <- data %>%
-  filter(MovieBudget == max(MovieBudget)) %>%
-  select(MovieName, MovieBudget, contains("Genre")) %>%
-  # Filtering only the genres that are 1 for the movie
-  mutate(across(starts_with("Genre"), ~ifelse(. == 1, 1, NA_integer_))) %>%
-  # Remove NA columns, keeping only genres with 1
-  select_if(~!all(is.na(.)))
-
-print(result)
 ```

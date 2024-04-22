@@ -753,9 +753,15 @@ will be use later to compare which movie is the best.</p>
 see what the most and least expensive films to produce where.</p>
 <pre class="r"><code>#bool&lt;- raw_data |&gt; c( Crime!=0, Drama!=0, Western!=0, Biography!=0, History!=0, Adventure!=0, Fantasy!=0, Mystery!=0, SciFi!=0, Romance!=0, Thriller!=0, War!=0, Family!=0, Animation!=0, Comedy!=0)
 
-#raw_data |&gt; slice_max(InflatedBudget) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross, raw_data[bool])
+#raw_data |&gt; slice_max(InflatedBudget) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross) |&gt; select ()
 
-#raw_data |&gt; filter(InflatedBudget == max(InflatedBudget)) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross, contains&quot;m&quot;)</code></pre>
+#raw_data |&gt; filter(InflatedBudget == max(InflatedBudget)) |&gt; select(FilmName, Year, InflatedBudget, InflatedGross, contains&quot;m&quot;)
+
+#Attempting to create a modified data frame for genreFAILED 
+#LINK[https://www.geeksforgeeks.org/how-to-filter-r-dataframe-by-values-in-a-column/#]
+#genreframe&lt;- raw_data[raw_data$col24==1]
+#genreframe
+#pivot_longer(raw_data, -c(FilmName, InflatedBudget)) |&gt; slice_max(InflatedBudget) |&gt; filter(value == 1) |&gt; pivot_wider()</code></pre>
 <p>And what films made the most and least grossing? What genres where
 these films?</p>
 <p>We know the answers to these questions for indivudual film entries -
@@ -931,28 +937,7 @@ income. Mutate each film to multiply ratio by income. Then Summarize by
 genre = true. Repeat for male so you can see both contributions. **We
 still have the classical-ness and popularity to mess around with.</li>
 </ul>
-<pre class="r"><code>library(dplyr)
-
-data &lt;- data.frame(
-  MovieName = c(&quot;Movie1&quot;, &quot;Movie2&quot;, &quot;Movie3&quot;),
-  Genre1 = c(0, 1, 1),
-  Genre2 = c(1, 0, 0),
-  Genre3 = c(1, 0, 1),
-  MovieBudget = c(2500000, 3430000, 1240000)
-)
-
-# Finding the movie with the highest budget
-result &lt;- data %&gt;%
-  filter(MovieBudget == max(MovieBudget)) %&gt;%
-  select(MovieName, MovieBudget, contains(&quot;Genre&quot;)) %&gt;%
-  # Filtering only the genres that are 1 for the movie
-  mutate(across(starts_with(&quot;Genre&quot;), ~ifelse(. == 1, 1, NA_integer_))) %&gt;%
-  # Remove NA columns, keeping only genres with 1
-  select_if(~!all(is.na(.)))
-
-print(result)</code></pre>
-<pre><code>##   MovieName MovieBudget Genre1
-## 1    Movie2     3430000      1</code></pre>
+<p>```</p>
 </div>
 
 
