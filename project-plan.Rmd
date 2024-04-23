@@ -16,7 +16,7 @@ Have you ever seen a film, and thought to yourself "Oh my god! This movie is a m
 Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
 The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown. The remaining percentage is filled by Pacific Islanders and other ethnicity. This data was collected by attendees of the University of Texas at Austin in 2017 for a Journal of Media Psychology publication. The goal of the original source was to determine how enjoyment and appreciation could impact viewers aggregate appraisals. The data used is available for download and review at [Data.World](https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films).
 
-## Data Preparation INSTRUCTIONS
+## Data Preparation
 
 Below, we load in the packages we'll be using to analyse our data.  
 
@@ -94,11 +94,6 @@ Notice the distribution of the films in the data. Out of 50 films, only 11 are p
 
 Next, we wanted to find the average budget for each year. We want to see if the year had an impact on the budget. 
 ```{r}
-#avg_year_budget <- raw_data |> group_by( Year) |> summarize(average_yearly_budget = mean(InflatedBudget))
-#avg_year_budget
-
-# or we can see if there is a trend in budget by the years
-# we can use this code
 raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
 ```
 
@@ -119,6 +114,9 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 
 ```
+
+Given that the y-axis is going by much larger facter than what the *InflatedBudget is going by 
+
 we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
 Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
 
@@ -134,17 +132,8 @@ BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH.
 Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
 
 ```{r}
-#bool<- raw_data |> c( Crime!=0, Drama!=0, Western!=0, Biography!=0, History!=0, Adventure!=0, Fantasy!=0, Mystery!=0, SciFi!=0, Romance!=0, Thriller!=0, War!=0, Family!=0, Animation!=0, Comedy!=0)
 
-#raw_data |> slice_max(InflatedBudget) |> select(FilmName, Year, InflatedBudget, InflatedGross) |> select ()
 
-#raw_data |> filter(InflatedBudget == max(InflatedBudget)) |> select(FilmName, Year, InflatedBudget, InflatedGross, contains"m")
-
-#Attempting to create a modified data frame for genreFAILED 
-#LINK[https://www.geeksforgeeks.org/how-to-filter-r-dataframe-by-values-in-a-column/#]
-#genreframe<- raw_data[raw_data$col24==1]
-#genreframe
-#pivot_longer(raw_data, -c(FilmName, InflatedBudget)) |> slice_max(InflatedBudget) |> filter(value == 1) |> pivot_wider()
 ```
 
 
