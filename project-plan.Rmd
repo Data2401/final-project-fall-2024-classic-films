@@ -213,16 +213,16 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, 
 ## Questions
 
 - Which movies were top rated in appreciation / enjoyment?
-- What factors relate to the appreciation / enjoyment rated?
+
 - Which genre have the highest appreciation rating? 
 - Which genre have the highest enjoyment rating? 
-- Does the budget of the movie affect the rating?
-- Does gender have an impact on how the movie was rated ?
-Meeting Notes: Create columns for Ratings????
 which genre cost more to produce?
 which genre has the highest income? Which sex contributes more to that income. Mutate each film to multiply ratio by income. Then Summarize by genre = true. Repeat for male so you can see both contributions. 
 **We still have the classical-ness and popularity to mess around with. 
 
+- Gender and how it affects budget. (Which gender contributes more to the gross of each genre- after budge/gross | pink blue)
+apreciation per genre
+enjoyment and genre
 
 
 ```
