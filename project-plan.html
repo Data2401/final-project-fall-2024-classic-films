@@ -770,10 +770,8 @@ these films?</p>
 <pre class="r"><code>#still need the genre</code></pre>
 <p>We know the answers to these questions for indivudual film entries -
 now we’ll answer them for the genre category.</p>
-<pre class="r"><code>#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
-
-#the beginning of where Dr.shoemaker example starts
-rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget))),
+<pre class="r"><code>#We&#39;ll arrange the code to output what we need to see. 
+genreGrossBudget &lt;- (rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget))),
       cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
       cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
       cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
@@ -788,179 +786,48 @@ rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt
     cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
     cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
     cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %&gt;% arrange(desc(meanBudget))</code></pre>
-<pre><code>##        genre  meangross meanBudget
-## 1     Family 1097910750  188821479
-## 2     Action 1374979940  184161982
-## 3    Fantasy 1405791155  175612328
-## 4     Comedy 1145731074  171610654
-## 5  Adventure 1352969543  168289054
-## 6      SciFi 1179509888  163855781
-## 7  Animation 1281157688  133814811
-## 8    Romance 1414164703  128979963
-## 9    Mystery  687354880  110231862
-## 10     Drama  603381470   60955479
-## 11  Thriller  603381470   60955479
-## 12     Crime  376929794   43187024
-## 13 Biography  117403926   39422850
-## 14   History  152564407   34946205
-## 15   Western  106494754   20769769
-## 16       War   40555510   13399819</code></pre>
+    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %&gt;% arrange(desc(meanBudget)))</code></pre>
+<pre class="r"><code>#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
+genreGrossBudget |&gt; slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |&gt; distinct()</code></pre>
+<pre><code>##    genre  meangross meanBudget
+## 1 Family 1097910750  188821479
+## 2    War   40555510   13399819</code></pre>
 <pre class="r"><code>#Over all, what genre cost more to produce on average? How much did that category produce in grossings?</code></pre>
 <p>For transparencys sake, its also important to note how many films
 under each genre make up the dataset.</p>
-<pre class="r"><code>genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
-genre</code></pre>
-<pre><code>##                          FilmName Crime Drama Western Action Biography History
-## 1               Shawshank_Classic     1     1       0      0         0       0
-## 2               Godfather_Classic     1     1       0      0         0       0
-## 3              Godfather2_classic     1     1       0      0         0       0
-## 4             PulpFiction_Classic     1     1       0      0         0       0
-## 5             GoodBadUgly_Classic     0     0       1      0         0       0
-## 6              DarkKnight_Classic     1     1       0      1         0       0
-## 7              12AngryMen_Classic     1     1       0      0         0       0
-## 8          SchindlersList_Classic     0     1       0      0         1       1
-## 9            LRReturnKing_Classic     0     0       0      0         0       0
-## 10              FightClub_Classic     0     1       0      0         0       0
-## 11              StarWars5_Classic     0     0       0      1         0       0
-## 12       LRFellowshipRing_Classic     0     0       0      0         0       0
-## 13            CuckoosNest_Classic     0     1       0      0         0       0
-## 14             Goodfellas_Classic     1     1       0      0         1       0
-## 15           SevenSamurai_Classic     0     1       0      0         0       0
-## 16              Inception_Classic     0     0       0      1         0       0
-## 17               StarWars_Classic     0     0       0      1         0       0
-## 18            ForrestGump_Classic     0     1       0      0         0       0
-## 19              TheMatrix_Classic     0     0       0      1         0       0
-## 20            LRTwoTowers_Classic     0     0       0      0         0       0
-## 21              CityofGod_Classic     1     1       0      0         0       0
-## 22          OnceUponaTime_Classic     0     0       1      0         0       0
-## 23           SilenceLambs_Classic     1     1       0      0         0       0
-## 24                  Se7en_Classic     1     1       0      0         0       0
-## 25             Casablanca_Classic     0     1       0      0         0       0
-## 26          UsualSuspects_Classic     1     1       0      0         0       0
-## 27    RaidersoftheLostArk_Classic     0     0       0      1         0       0
-## 28                 Avatar_Classic     0     0       0      1         0       0
-## 29                Titanic_Classic     0     1       0      0         0       0
-## 30            TheAvengers_Classic     0     0       0      1         0       0
-## 31      HPDeathlyHallows2_Classic     0     1       0      0         0       0
-## 32               IronMan3_Classic     0     0       0      1         0       0
-## 33          Transformers3_Classic     0     0       0      1         0       0
-## 34                Skyfall_Classic     0     0       0      1         0       0
-## 35        DarkKnightRises_Classic     0     0       0      1         0       0
-## 36   PCA\xcaDeadMansChest_Classic     0     0       0      1         0       0
-## 37              ToyStory3_Classic     0     0       0      0         0       0
-## 38 PCA\xcaOnStrangerTides_Classic     0     0       0      1         0       0
-## 39           JurassicPark_Classic     0     0       0      0         0       0
-## 40              StarWarsI_Classic     0     0       0      1         0       0
-## 41        AliceWonderland_Classic     0     0       0      0         0       0
-## 42              TheHobbit_Classic     0     0       0      0         0       0
-## 43               LionKing_Classic     0     1       0      0         0       0
-## 44       HPSorcerersStone_Classic     0     0       0      0         0       0
-## 45  HP\xcaDeathlyHallows1_Classic     0     0       0      0         0       0
-## 46    HPOrderofthePhoenix_Classic     0     0       0      0         0       0
-## 47      HPHalfBloodPrince_Classic     0     0       0      0         0       0
-## 48                 Shrek2_Classic     0     0       0      0         0       0
-## 49          PCAtWorldsEnd_Classic     0     0       0      1         0       0
-## 50            FindingNemo_Classic     0     0       0      0         0       0
-##    Adventure Fantasy Mystery SciFi Romance Thriller War Family Animation Comedy
-## 1          0       0       0     0       0        0   0      0         0      0
-## 2          0       0       0     0       0        0   0      0         0      0
-## 3          0       0       0     0       0        0   0      0         0      0
-## 4          0       0       0     0       0        0   0      0         0      0
-## 5          0       0       0     0       0        0   0      0         0      0
-## 6          0       0       0     0       0        0   0      0         0      0
-## 7          0       0       0     0       0        0   0      0         0      0
-## 8          0       0       0     0       0        0   0      0         0      0
-## 9          1       1       0     0       0        0   0      0         0      0
-## 10         0       0       0     0       0        0   0      0         0      0
-## 11         1       1       0     0       0        0   0      0         0      0
-## 12         1       1       0     0       0        0   0      0         0      0
-## 13         0       0       0     0       0        0   0      0         0      0
-## 14         0       0       0     0       0        0   0      0         0      0
-## 15         0       0       0     0       0        0   0      0         0      0
-## 16         0       0       1     1       0        0   0      0         0      0
-## 17         1       1       0     0       0        0   0      0         0      0
-## 18         0       0       0     0       1        0   0      0         0      0
-## 19         0       0       0     1       0        0   0      0         0      0
-## 20         1       1       0     0       0        0   0      0         0      0
-## 21         0       0       0     0       0        0   0      0         0      0
-## 22         0       0       0     0       0        0   0      0         0      0
-## 23         0       0       0     0       0        1   0      0         0      0
-## 24         0       0       1     0       0        0   0      0         0      0
-## 25         0       0       0     0       1        0   1      0         0      0
-## 26         0       0       0     0       0        1   0      0         0      0
-## 27         1       0       0     0       0        0   0      0         0      0
-## 28         1       1       0     0       0        0   0      0         0      0
-## 29         0       0       0     0       1        0   0      0         0      0
-## 30         1       0       0     1       0        0   0      0         0      0
-## 31         1       1       0     0       0        0   0      0         0      0
-## 32         1       0       0     1       0        0   0      0         0      0
-## 33         1       0       0     1       0        0   0      0         0      0
-## 34         1       0       0     0       0        1   0      0         0      0
-## 35         0       0       0     0       0        1   0      0         0      0
-## 36         1       1       0     0       0        0   0      0         0      0
-## 37         1       0       0     0       0        0   0      0         1      1
-## 38         1       1       0     0       0        0   0      0         0      0
-## 39         1       0       0     1       0        1   0      0         0      0
-## 40         1       1       0     0       0        0   0      0         0      0
-## 41         1       1       0     0       0        0   0      1         0      0
-## 42         1       1       0     0       0        0   0      0         0      0
-## 43         1       0       0     0       0        0   0      0         1      0
-## 44         1       1       0     0       0        0   0      1         0      0
-## 45         1       1       0     0       0        0   0      1         0      0
-## 46         1       1       0     0       0        0   0      1         0      0
-## 47         1       1       0     0       0        0   0      1         0      0
-## 48         1       0       0     0       0        0   0      1         0      1
-## 49         1       1       0     0       0        0   0      0         0      0
-## 50         1       0       0     0       0        0   0      0         1      1</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(sum = sum(Comedy == 1))))</code></pre>
-<pre><code>##    genre sum
-## 1 Comedy   3</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(sum = sum(Drama == 1))))</code></pre>
-<pre><code>##   genre sum
-## 1 Drama  20</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(sum = sum(Western == 1))))</code></pre>
-<pre><code>##     genre sum
-## 1 Western   2</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(sum = sum(Action == 1))))</code></pre>
-<pre><code>##    genre sum
-## 1 Action  16</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(sum = sum(Biography == 1))))</code></pre>
-<pre><code>##       genre sum
-## 1 Biography   2</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(sum = sum(History == 1))))</code></pre>
-<pre><code>##     genre sum
-## 1 History   1</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(sum = sum(Adventure == 1))))</code></pre>
-<pre><code>##       genre sum
-## 1 Adventure  27</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(sum = sum(Fantasy == 1))))</code></pre>
-<pre><code>##     genre sum
-## 1 Fantasy  17</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(sum = sum(Mystery == 1))))</code></pre>
-<pre><code>##     genre sum
-## 1 Mystery   2</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(sum = sum(SciFi == 1))))</code></pre>
-<pre><code>##   genre sum
-## 1 SciFi   6</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(sum = sum(Romance == 1))))</code></pre>
-<pre><code>##     genre sum
-## 1 Romance   3</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Thriller == 1) %&gt;% summarise(sum = sum(Thriller == 1))))</code></pre>
-<pre><code>##      genre sum
-## 1 Thriller   5</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(sum = sum(Crime == 1))))</code></pre>
-<pre><code>##   genre sum
-## 1 Crime  11</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(sum = sum(War == 1))))</code></pre>
-<pre><code>##   genre sum
-## 1   War   1</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(sum = sum(Family == 1))))</code></pre>
-<pre><code>##    genre sum
-## 1 Family   6</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(sum = sum(Animation == 1))))</code></pre>
-<pre><code>##       genre sum
-## 1 Animation   3</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(sum = sum(Comedy == 1))),
+    cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(sum = sum(Drama == 1))),
+    cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(sum = sum(Western == 1))),
+    cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(sum = sum(Action == 1))),
+    cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(sum = sum(Biography == 1))),
+    cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(sum = sum(History == 1))),
+    cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(sum = sum(Adventure == 1))),
+    cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(sum = sum(Fantasy == 1))),
+    cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(sum = sum(Mystery == 1))),
+    cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(sum = sum(SciFi == 1))),
+    cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(sum = sum(Romance == 1))),
+    cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Thriller == 1) %&gt;% summarise(sum = sum(Thriller == 1))),
+    cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(sum = sum(Crime == 1))),
+    cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(sum = sum(War == 1))),
+    cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(sum = sum(Family == 1))),
+    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(sum = sum(Animation == 1))))%&gt;% arrange(desc(sum))</code></pre>
+<pre><code>##        genre sum
+## 1  Adventure  27
+## 2      Drama  20
+## 3    Fantasy  17
+## 4     Action  16
+## 5      Crime  11
+## 6      SciFi   6
+## 7     Family   6
+## 8   Thriller   5
+## 9     Comedy   3
+## 10   Romance   3
+## 11 Animation   3
+## 12   Western   2
+## 13 Biography   2
+## 14   Mystery   2
+## 15   History   1
+## 16       War   1</code></pre>
 <pre class="r"><code>#the end of numbers of genre</code></pre>
 <p>###T</p>
 <pre class="r"><code>#popularity</code></pre>

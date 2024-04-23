@@ -146,10 +146,8 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
 We know the answers to these questions for indivudual film entries - now we'll answer them for the genre category. 
 
 ```{r}
-#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
-
-#the beginning of where Dr.shoemaker example starts
-rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget))),
+#We'll arrange the code to output what we need to see. 
+genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget))),
       cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
       cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
       cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
@@ -164,34 +162,36 @@ rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(mea
     cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
     cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
     cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %>% arrange(desc(meanBudget))
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %>% arrange(desc(meanBudget)))
+```
 
+```{r}
+#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
+genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |> distinct()
 #Over all, what genre cost more to produce on average? How much did that category produce in grossings?
-
 
 ```
 For transparencys sake, its also important to note how many films under each genre make up the dataset.    
 
 ```{r}
-genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
-genre
 
-rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))))
-rbind(cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sum = sum(Drama == 1))))
-rbind(cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sum = sum(Western == 1))))
-rbind(cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sum = sum(Action == 1))))
-rbind(cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sum = sum(Biography == 1))))
-rbind(cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sum = sum(History == 1))))
-rbind(cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sum = sum(Adventure == 1))))
-rbind(cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sum = sum(Fantasy == 1))))
-rbind(cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sum = sum(Mystery == 1))))
-rbind(cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sum = sum(SciFi == 1))))
-rbind(cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sum = sum(Romance == 1))))
-rbind(cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sum = sum(Thriller == 1))))
-rbind(cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sum = sum(Crime == 1))))
-rbind(cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sum = sum(War == 1))))
-rbind(cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sum = sum(Family == 1))))
-rbind(cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sum = sum(Animation == 1))))
+rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sum = sum(Drama == 1))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sum = sum(Western == 1))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sum = sum(Action == 1))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sum = sum(Biography == 1))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sum = sum(History == 1))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sum = sum(Adventure == 1))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sum = sum(Fantasy == 1))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sum = sum(Mystery == 1))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sum = sum(SciFi == 1))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sum = sum(Romance == 1))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sum = sum(Thriller == 1))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sum = sum(Crime == 1))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sum = sum(War == 1))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sum = sum(Family == 1))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sum = sum(Animation == 1))))%>% arrange(desc(sum))
+
 #the end of numbers of genre
 
 ```
