@@ -197,9 +197,51 @@ rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum
 ```
 ###T
 ```{r}
-#popularity
+#genre enjoyment
+genre_enj <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meanenj = mean(Enjoyment))))%>% arrange(desc(meanenj))
+
+genre_enj |> slice(which(meanenj ==max(meanenj) | meanenj == min(meanenj))) |> distinct()
 
 ```
+
+```{r}
+#genre appreaction
+genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meanapp = mean(Appreciation))))%>% arrange(desc(meanapp))
+
+genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> distinct()
+```
+
+
 Let see what movie is actually the best. 
 ```{r}
 raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)

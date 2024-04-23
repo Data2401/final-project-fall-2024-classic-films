@@ -382,6 +382,7 @@ appraisals. The data used is available for download and review at <a href="https
 data.</p>
 <pre class="r"><code>#Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -830,7 +831,50 @@ under each genre make up the dataset.</p>
 ## 16       War   1</code></pre>
 <pre class="r"><code>#the end of numbers of genre</code></pre>
 <p>###T</p>
-<pre class="r"><code>#popularity</code></pre>
+<pre class="r"><code>#genre enjoyment
+genre_enj &lt;- rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Thriller == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(meanenj = mean(Enjoyment))),
+    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meanenj = mean(Enjoyment))))%&gt;% arrange(desc(meanenj))
+
+genre_enj |&gt; slice(which(meanenj ==max(meanenj) | meanenj == min(meanenj))) |&gt; distinct()</code></pre>
+<pre><code>##       genre meanenj
+## 1 Animation    6.42
+## 2   History    4.23</code></pre>
+<pre class="r"><code>#genre appreaction
+genre_app &lt;- rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Thriller == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(meanapp = mean(Appreciation))),
+    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meanapp = mean(Appreciation))))%&gt;% arrange(desc(meanapp))
+
+genre_app |&gt; slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |&gt; distinct()</code></pre>
+<pre><code>##     genre  meanapp
+## 1 History 6.367521
+## 2 Western 4.364370</code></pre>
 <p>Let see what movie is actually the best.</p>
 <pre class="r"><code>raw_data |&gt; slice_max(Appreciation, n = 10)|&gt; select(FilmName,Appreciation, Enjoyment)</code></pre>
 <pre><code>##                  FilmName Appreciation Enjoyment
