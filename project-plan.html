@@ -382,6 +382,7 @@ appraisals. The data used is available for download and review at <a href="https
 data.</p>
 <pre class="r"><code>#Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to &#39;clean&#39; data</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.3</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
@@ -653,7 +654,6 @@ there?</p>
 <pre class="r"><code>#What is the release year range of the films in our dataset?
 range(raw_data$Year)</code></pre>
 <pre><code>## [1] 1942 2013</code></pre>
-<pre class="r"><code>#raw_data|&gt;group_by(genre)</code></pre>
 <p>Does the data contain multiple films per year? Is so, what is the
 count for each year?</p>
 <pre class="r"><code> raw_data|&gt;group_by(Year) |&gt; summarise(Movie_Count = n()) |&gt; arrange(desc(Movie_Count))</code></pre>
@@ -748,8 +748,27 @@ will be use later to compare which movie is the best.</p>
 <p>###Genres</p>
 <p>Is there a specific genre that costs more to produce? First, we’ll
 see what the most and least expensive films to produce where.</p>
+<pre class="r"><code>raw_data |&gt; slice_max(InflatedBudget, n = 1) |&gt; select(FilmName, InflatedGross)</code></pre>
+<pre><code>##                FilmName InflatedGross
+## 1 PCAtWorldsEnd_Classic    1079129111</code></pre>
+<pre class="r"><code>raw_data |&gt; slice_min(InflatedBudget, n = 1) |&gt; select(FilmName, InflatedGross)</code></pre>
+<pre><code>##              FilmName InflatedGross
+## 1 PulpFiction_Classic     331206735</code></pre>
 <p>And what films made the most and least grossing? What genres where
 these films?</p>
+<pre class="r"><code>raw_data |&gt; slice_max(InflatedGross, n = 10) |&gt; select(FilmName, InflatedGross)</code></pre>
+<pre><code>##                     FilmName InflatedGross
+## 1            Titanic_Classic    3153199889
+## 2             Avatar_Classic    3014400460
+## 3           StarWars_Classic    2939933749
+## 4       JurassicPark_Classic    1634773761
+## 5        TheAvengers_Classic    1541373834
+## 6           LionKing_Classic    1528832656
+## 7          StarWars5_Classic    1499045455
+## 8          StarWarsI_Classic    1419296470
+## 9       LRReturnKing_Classic    1411841983
+## 10 HPDeathlyHallows2_Classic    1390228199</code></pre>
+<pre class="r"><code>#still need the genre</code></pre>
 <p>We know the answers to these questions for indivudual film entries -
 now we’ll answer them for every genre category.</p>
 <pre class="r"><code>#Over all, what category cost more to produce on average? How much did that category produce in grossing? 
@@ -757,14 +776,7 @@ now we’ll answer them for every genre category.</p>
 #Over all, what genre cost more to produce on average? How much did that category produce in grossings?</code></pre>
 <p>For transparencys sake, its also important to note how many films
 under each genre make up the dataset.</p>
-<pre class="r"><code>#created a new data for genre but not sure if it was correct way to combat the genre question
-
-genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,InflatedBudget,InflatedGross)))
-
-
-#genre |&gt; group_by(c(Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy)) |&gt; summarise(genre_count = n())
-
-genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
+<pre class="r"><code>genre &lt;- raw_data |&gt; reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
 genre</code></pre>
 <pre><code>##                          FilmName Crime Drama Western Action Biography History
 ## 1               Shawshank_Classic     1     1       0      0         0       0
@@ -868,7 +880,57 @@ genre</code></pre>
 ## 48         1       0       0     0       0        0   0      1         0      1
 ## 49         1       1       0     0       0        0   0      0         0      0
 ## 50         1       0       0     0       0        0   0      0         1      1</code></pre>
-<pre class="r"><code>rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), 
+<pre class="r"><code>rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(sum = sum(Comedy == 1))))</code></pre>
+<pre><code>##    genre sum
+## 1 Comedy   3</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(sum = sum(Drama == 1))))</code></pre>
+<pre><code>##   genre sum
+## 1 Drama  20</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(sum = sum(Western == 1))))</code></pre>
+<pre><code>##     genre sum
+## 1 Western   2</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(sum = sum(Action == 1))))</code></pre>
+<pre><code>##    genre sum
+## 1 Action  16</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(sum = sum(Biography == 1))))</code></pre>
+<pre><code>##       genre sum
+## 1 Biography   2</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(sum = sum(History == 1))))</code></pre>
+<pre><code>##     genre sum
+## 1 History   1</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(sum = sum(Adventure == 1))))</code></pre>
+<pre><code>##       genre sum
+## 1 Adventure  27</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(sum = sum(Fantasy == 1))))</code></pre>
+<pre><code>##     genre sum
+## 1 Fantasy  17</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(sum = sum(Mystery == 1))))</code></pre>
+<pre><code>##     genre sum
+## 1 Mystery   2</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(sum = sum(SciFi == 1))))</code></pre>
+<pre><code>##   genre sum
+## 1 SciFi   6</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(sum = sum(Romance == 1))))</code></pre>
+<pre><code>##     genre sum
+## 1 Romance   3</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Thriller == 1) %&gt;% summarise(sum = sum(Thriller == 1))))</code></pre>
+<pre><code>##      genre sum
+## 1 Thriller   5</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(sum = sum(Crime == 1))))</code></pre>
+<pre><code>##   genre sum
+## 1 Crime  11</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(sum = sum(War == 1))))</code></pre>
+<pre><code>##   genre sum
+## 1   War   1</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(sum = sum(Family == 1))))</code></pre>
+<pre><code>##    genre sum
+## 1 Family   6</code></pre>
+<pre class="r"><code>rbind(cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(sum = sum(Animation == 1))))</code></pre>
+<pre><code>##       genre sum
+## 1 Animation   3</code></pre>
+<pre class="r"><code>#the end of numbers of genre
+#the beginning of where Dr.shoemaker example starts
+rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), 
                                                                              meanfemale = mean(Proportion_female))),
       cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(meangross = mean(InflatedGross),
                                                                                meanfemale = mean(Proportion_female))),

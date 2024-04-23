@@ -75,7 +75,6 @@ We'll start by learning about our data has. What is the year range of it? How ma
 #What is the release year range of the films in our dataset?
 range(raw_data$Year)
 
-#raw_data|>group_by(genre)
 ```
 Does the data contain multiple films per year? Is so, what is the count for each year? 
 ```{r}
@@ -132,7 +131,8 @@ BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH.
 Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
 
 ```{r}
-
+raw_data |> slice_max(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
+raw_data |> slice_min(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
 
 ```
 
@@ -140,7 +140,8 @@ Is there a specific genre that costs more to produce? First, we'll see what the 
 And what films made the most and least grossing? What genres where these films?
 
 ```{r}
-
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
+#still need the genre
 ```
 We know the answers to these questions for indivudual film entries - now we'll answer them for every genre category. 
 
@@ -154,18 +155,27 @@ We know the answers to these questions for indivudual film entries - now we'll a
 For transparencys sake, its also important to note how many films under each genre make up the dataset.    
 
 ```{r}
-#created a new data for genre but not sure if it was correct way to combat the genre question
-
-genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,InflatedBudget,InflatedGross)))
-
-
-#genre |> group_by(c(Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy)) |> summarise(genre_count = n())
-
 genre <- raw_data |> reframe(across(c(FilmName,Crime, Drama, Western, Action, Biography, History, Adventure,Fantasy, Mystery, SciFi, Romance, Thriller, War, Family, Animation,Comedy,FilmName)))
 genre
 
-
-
+rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))))
+rbind(cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sum = sum(Drama == 1))))
+rbind(cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sum = sum(Western == 1))))
+rbind(cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sum = sum(Action == 1))))
+rbind(cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sum = sum(Biography == 1))))
+rbind(cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sum = sum(History == 1))))
+rbind(cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sum = sum(Adventure == 1))))
+rbind(cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sum = sum(Fantasy == 1))))
+rbind(cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sum = sum(Mystery == 1))))
+rbind(cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sum = sum(SciFi == 1))))
+rbind(cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sum = sum(Romance == 1))))
+rbind(cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sum = sum(Thriller == 1))))
+rbind(cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sum = sum(Crime == 1))))
+rbind(cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sum = sum(War == 1))))
+rbind(cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sum = sum(Family == 1))))
+rbind(cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sum = sum(Animation == 1))))
+#the end of numbers of genre
+#the beginning of where Dr.shoemaker example starts
 rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), 
                                                                              meanfemale = mean(Proportion_female))),
       cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(meangross = mean(InflatedGross),
