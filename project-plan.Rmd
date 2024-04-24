@@ -165,14 +165,30 @@ genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy ==
     cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %>% arrange(desc(meanBudget)))
 ```
 
+
+
 ```{r}
-#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
-genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |> distinct()
 #Over all, what genre cost more to produce on average? How much did that category produce in grossings?
 
-```
-For transparencys sake, its also important to note how many films under each genre make up the dataset.    
+#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
+genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |> distinct()
 
+```
+    
+We want to see all of that information in a way that is visually apealing and easy to understand. We'll create a graph. 
+
+```{r}
+ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget), stat = "identity")
+
+#ggplot for meangross
+ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross), stat = "identity")
+```
+Mutate to add avg malegross and femalegross. 
+
+```{r}
+#genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
+```
+For transparencys sake, its also important to note how many films under each genre make up the dataset
 ```{r}
 
 rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))),
@@ -258,7 +274,7 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, 
 
 - Which genre have the highest appreciation rating? 
 - Which genre have the highest enjoyment rating? 
-which genre cost more to produce?
+which genre cost more to produce? dome
 which genre has the highest income? Which sex contributes more to that income. Mutate each film to multiply ratio by income. Then Summarize by genre = true. Repeat for male so you can see both contributions. 
 **We still have the classical-ness and popularity to mess around with. 
 
