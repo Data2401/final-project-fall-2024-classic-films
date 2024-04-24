@@ -771,29 +771,47 @@ these films?</p>
 <p>We know the answers to these questions for indivudual film entries -
 now we’ll answer them for the genre category.</p>
 <pre class="r"><code>#We&#39;ll arrange the code to output what we need to see. 
-genreGrossBudget &lt;- (rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget))),
-      cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-      cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-      cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-     cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))), 
-    cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-        cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget))),
-    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget)))) %&gt;% arrange(desc(meanBudget)))</code></pre>
+genreGrossBudget &lt;- (rbind(cbind(genre = &quot;Comedy&quot;, raw_data %&gt;% filter(Comedy == 1) %&gt;% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+      cbind(genre = &quot;Drama&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+      cbind(genre = &quot;Western&quot;, raw_data %&gt;% filter(Western == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+      cbind(genre = &quot;Action&quot;, raw_data %&gt;% filter(Action == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+     cbind(genre = &quot;Biography&quot;, raw_data %&gt;% filter(Biography == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;History&quot;, raw_data %&gt;% filter(History == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))), 
+    cbind(genre = &quot;Adventure&quot;, raw_data %&gt;% filter(Adventure == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+        cbind(genre = &quot;Fantasy&quot;, raw_data %&gt;% filter(Fantasy == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Mystery&quot;, raw_data %&gt;% filter(Mystery == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;SciFi&quot;, raw_data %&gt;% filter(SciFi == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Romance&quot;, raw_data %&gt;% filter(Romance == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Thriller&quot;, raw_data %&gt;% filter(Drama == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Crime&quot;, raw_data %&gt;% filter(Crime == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;War&quot;, raw_data %&gt;% filter(War == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Family&quot;, raw_data %&gt;% filter(Family == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross))),
+    cbind(genre = &quot;Animation&quot;, raw_data %&gt;% filter(Animation == 1) %&gt;% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Malegross = ((mean(Proportion_male))*meangross)))) %&gt;% arrange(desc(meanBudget)))
+genreGrossBudget</code></pre>
+<pre><code>##        genre  meangross meanBudget Malegross
+## 1     Family 1097910750  188821479 292776200
+## 2     Action 1374979940  184161982 511320665
+## 3    Fantasy 1405791155  175612328 475488185
+## 4     Comedy 1145731074  171610654 309347390
+## 5  Adventure 1352969543  168289054 461011844
+## 6      SciFi 1179509888  163855781 436418659
+## 7  Animation 1281157688  133814811 350183101
+## 8    Romance 1414164703  128979963 400679999
+## 9    Mystery  687354880  110231862 219953562
+## 10     Drama  603381470   60955479 213295350
+## 11  Thriller  603381470   60955479 213295350
+## 12     Crime  376929794   43187024 145974629
+## 13 Biography  117403926   39422850  49309649
+## 14   History  152564407   34946205  48820610
+## 15   Western  106494754   20769769  47390165
+## 16       War   40555510   13399819  13383318</code></pre>
 <pre class="r"><code>#Over all, what genre cost more to produce on average? How much did that category produce in grossings?
 
 #Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
 genreGrossBudget |&gt; slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |&gt; distinct()</code></pre>
-<pre><code>##    genre  meangross meanBudget
-## 1 Family 1097910750  188821479
-## 2    War   40555510   13399819</code></pre>
+<pre><code>##    genre  meangross meanBudget Malegross
+## 1 Family 1097910750  188821479 292776200
+## 2    War   40555510   13399819  13383318</code></pre>
 <p>We want to see all of that information in a way that is visually
 apealing and easy to understand. We’ll create a graph.</p>
 <pre class="r"><code>ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget), stat = &quot;identity&quot;)</code></pre>
