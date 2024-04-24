@@ -2,7 +2,7 @@
 title: "Rough Plan"
 author: "Rose Campos, Jessenia Contreras"
 date: "2024-04-04"
-output: html_document
+output: powerpoint_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -145,7 +145,7 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
 ```
 We know the answers to these questions for indivudual film entries - now we'll answer them for the genre category. 
 
-```{r Arranging code for genre manipulation}
+```{r}
 #We'll arrange the code to output what we need to see. 
 genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
       cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget),  Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
@@ -165,7 +165,6 @@ genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy ==
     cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross)))) %>% arrange(desc(meanBudget)))
 genreGrossBudget
 
-genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
 
@@ -188,13 +187,13 @@ ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross), stat = "ide
 ```
 Mutate to add avg malegross and femalegross. 
 
-```{r Plotting sex proportion w/  meangross}
+```{r}
 #genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
 
-ggplot(genreGrossBudget, aes(genre, meangross, fill = Malegross)) + geom_col()
+genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
-For transparency s sake, its also important to note how many films under each genre make up the dataset
+For transparency's sake, its also important to note how many films under each genre make up the dataset
 ```{r}
 
 rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))),
@@ -292,15 +291,15 @@ enjoyment and genre
 #Intro
 #Tidying/Cleaning
 #yEAR$RAWDATA
-- gENRE Count
-- Limitations of the data
----
-$vyear 
---budget and income
---genrevbudget
---genrevincome
-genre v sex
-genre v grosssex
-gen enjoyvapreciation
+#- gENRE Count
+#- Limitations of the data
+#---
+#$vyear 
+#--budget and income
+#--genrevbudget
+#--genrevincome
+#genre v sex
+#genre v grosssex
+#gen enjoyvapreciation
 
 
