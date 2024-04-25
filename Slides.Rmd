@@ -84,7 +84,8 @@ genre_total
 
 #ggplot(genre_total) + geom_histogram(mapping = aes(x = (genre_total$stat = "count"), stat = "identity"))+ geom_histogram(bins = 15)
 #ggplot(genre_total, aes(x = (genre_total$stat = "count"), stat = "identity") + geom_histogram(bins = 15))
-Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG), stat = "identity")
+Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fill = genre), stat = "identity", position = "dodge") + labs(x = 'Genres', y = 'Genre Count', title = 'Genre Distribution in Dataset') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
+
 
 
 ```
@@ -111,11 +112,11 @@ Genre_Count_Plot
 ## Film Count by Year 
 ```{r echo=FALSE}
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
-ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col()
+ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col() + labs(x = 'Year', y = 'Film Count', title = 'Film Release Distribution by Year in Dataset') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ```{r include=FALSE}
-Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
+Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()+labs(x = 'Year', y = 'Inflated Budget', title = 'Average Film Budget by Year') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## Average Budget by Year
