@@ -78,7 +78,7 @@ range(raw_data$Year)
 ```
 Does the data contain multiple films per year? Is so, what is the count for each year? 
 ```{r}
- #raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
+ raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 
 ```
 The above is arranged by to be descending by amount of movies present of each year but it is difficult to see this overall. To give visibility to this distribution we create a plot based on the above coding. First we save it to a variable. 
@@ -165,7 +165,6 @@ genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy ==
     cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross)))) %>% arrange(desc(meanBudget)))
 genreGrossBudget
 
-genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
 
@@ -191,30 +190,36 @@ Mutate to add avg malegross and femalegross.
 ```{r Plotting sex proportion w/  meangross}
 #genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
 
-ggplot(genreGrossBudget, aes(genre, meangross, fill = Malegross)) + geom_col()
+genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
 For transparency s sake, its also important to note how many films under each genre make up the dataset
 ```{r}
 
-rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))),
-    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sum = sum(Drama == 1))),
-    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sum = sum(Western == 1))),
-    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sum = sum(Action == 1))),
-    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sum = sum(Biography == 1))),
-    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sum = sum(History == 1))),
-    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sum = sum(Adventure == 1))),
-    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sum = sum(Fantasy == 1))),
-    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sum = sum(Mystery == 1))),
-    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sum = sum(SciFi == 1))),
-    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sum = sum(Romance == 1))),
-    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sum = sum(Thriller == 1))),
-    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sum = sum(Crime == 1))),
-    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sum = sum(War == 1))),
-    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sum = sum(Family == 1))),
-    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sum = sum(Animation == 1))))%>% arrange(desc(sum))
+genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sumG = sum(Western == 1))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sumG = sum(Action == 1))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sumG = sum(Biography == 1))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sumG = sum(History == 1))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sumG = sum(Adventure == 1))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sumG = sum(Fantasy == 1))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sumG = sum(Mystery == 1))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sumG = sum(SciFi == 1))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sumG = sum(Romance == 1))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sumG = sum(Thriller == 1))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sumG = sum(Crime == 1))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sumG = sum(War == 1))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sumG = sum(Family == 1))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sumG = sum(Animation == 1))))%>% arrange(desc(sumG))
 
+genre_total
 #the end of numbers of genre
+
+#ggplot(genre_total) + geom_histogram(mapping = aes(x = (genre_total$stat = "count"), stat = "identity"))+ geom_histogram(bins = 15)
+#ggplot(genre_total, aes(x = (genre_total$stat = "count"), stat = "identity") + geom_histogram(bins = 15))
+ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG), stat = "identity")
+
 
 ```
 ###T

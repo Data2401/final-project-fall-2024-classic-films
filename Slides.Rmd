@@ -40,7 +40,8 @@ library(dplyr) ##Loaded for computer issues
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
 ```
-### Cleaning and Mutating Data
+
+## Cleaning and Mutating Data
 Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. Additionally, we mutated a variable called *Proportion_female* so we could store the female ratio of the sample group for that film. 
 ```{r}
 #To remove "$" and "," from InflatedBudget
@@ -59,58 +60,76 @@ raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
 raw_data <- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
 ```
 
-### Glimpse(raw_data)
+```{r include=FALSE}
+#For transparencys sake, its also important to note how many films under each genre make up the dataset.
+genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sumG = sum(Western == 1))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sumG = sum(Action == 1))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sumG = sum(Biography == 1))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sumG = sum(History == 1))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sumG = sum(Adventure == 1))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sumG = sum(Fantasy == 1))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sumG = sum(Mystery == 1))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sumG = sum(SciFi == 1))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sumG = sum(Romance == 1))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sumG = sum(Thriller == 1))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sumG = sum(Crime == 1))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sumG = sum(War == 1))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sumG = sum(Family == 1))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sumG = sum(Animation == 1))))%>% arrange(desc(sumG))
+
+genre_total
+#the end of numbers of genre
+
+#ggplot(genre_total) + geom_histogram(mapping = aes(x = (genre_total$stat = "count"), stat = "identity"))+ geom_histogram(bins = 15)
+#ggplot(genre_total, aes(x = (genre_total$stat = "count"), stat = "identity") + geom_histogram(bins = 15))
+Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG), stat = "identity")
+
+
+```
+## Glimpse(raw_data)
 ```{r}
 #To view our data with the new variable.
 glimpse(raw_data)
 ```
+
 ## Data Analysis 
 
-- Uncover new information in the data that isn’t immediately apparent (such as: don’t just plot the data as is, but filter or group the data in
-different ways, create new variables, or join different data frames together to get new summaries)
-- Provide your findings in plots or tables. Display findings in different ways.
-- Graphs all have purpose and help tell your story. Make sure you have a graph that illustrates your primary point and that they are all
-appropriately formatted (plot and axis titles, legends if needed, appropriate plot types used)
-- Use tables effectively to perform comparisons, highlighting important features.
-- Your analysis should be thoroughly, yet concisely, explained. Make sure your insights and discoveries are highlighted, and easy to see and
-understand
-
 We'll start by learning about our data has. What is the year range of it? How many films make up our data? How many films of each genere are there? 
-```{r}
+```{r echo=FALSE}
 #What is the release year range of the films in our dataset?
 range(raw_data$Year)
 
+#How many films make up our dataset?
+print(nrow(raw_data))
+
+#What is the genre distribution of our dataset?
+Genre_Count_Plot
 ```
-Does the data contain multiple films per year? Is so, what is the count for each year? 
-```{r}
- #raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
+## Movie by Year 
+Does the data contain multiple films per year? Is so, what is the count for each year?
 
-```
-The above is arranged by to be descending by amount of movies present of each year but it is difficult to see this overall. To give visibility to this distribution we create a plot based on the above coding. First we save it to a variable. 
-
-```{r}
-#Storing the code to the "count_movieby_year" variable. 
-
+```{r echo=FALSE}
+#Storing the code to the "count_movieby_year" variable.
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col()
 ```
-Notice the distribution of the films in the data. Out of 50 films, only 11 are pre-1990's while the remaining majority are from the early 1990's to the late 2010's. Keep in mind that this uneven distribution of films might impact the conclusions drawn from the data. 
 
-Next, we wanted to find the average budget for each year. We want to see if the year had an impact on the budget. 
-```{r}
+## Average Budget by Year
+```{r echo=FALSE}
 raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
 ```
 
-From the graph we can see there is a trend. The graphs tell us that the closer we get to right side of the graph(closer to the year 2013), the budget have increase. There is a rapid increase from the year 1990's to the year 2010's.
 
-Now we want to see, if what the relation is between a films budget and gross income. First we focus on the plotting the *InflatedGross* income. 
+## Inflated Grossing v. Year
 ```{r}
 raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point() + geom_smooth()
 
 ```
 
+## InflatedGross v. InflatedBudget by Year
 It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
-
 ```{r}
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
 
@@ -119,19 +138,19 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 ```
 
-Given that the y-axis is going by much larger facter than what the *InflatedBudget is going by 
+## InflatedGross v. InflatedBudget by Year (Side-By-Side)
 
-we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
-Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
 
-```{r}
+```{r include=FALSE}
+#we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
+#Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
+
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year, InflatedGross)
 ```
 
 
-BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH. 
 
-###Genres
+## Genres
 
 Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
 
@@ -198,29 +217,7 @@ Mutate to add avg malegross and femalegross.
 genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
-For transparency's sake, its also important to note how many films under each genre make up the dataset
-```{r}
 
-rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sum = sum(Comedy == 1))),
-    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sum = sum(Drama == 1))),
-    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sum = sum(Western == 1))),
-    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sum = sum(Action == 1))),
-    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sum = sum(Biography == 1))),
-    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sum = sum(History == 1))),
-    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sum = sum(Adventure == 1))),
-    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sum = sum(Fantasy == 1))),
-    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sum = sum(Mystery == 1))),
-    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sum = sum(SciFi == 1))),
-    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sum = sum(Romance == 1))),
-    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sum = sum(Thriller == 1))),
-    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sum = sum(Crime == 1))),
-    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sum = sum(War == 1))),
-    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sum = sum(Family == 1))),
-    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sum = sum(Animation == 1))))%>% arrange(desc(sum))
-
-#the end of numbers of genre
-
-```
 ###T
 ```{r}
 #genre enjoyment
