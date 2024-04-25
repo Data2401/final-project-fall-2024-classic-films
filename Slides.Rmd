@@ -148,7 +148,7 @@ Avg_Grossing_by_Year
 ```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 ##It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
-raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "darkmagenta") + geom_point(aes(y=InflatedGross), color = "darkgreen") + geom_smooth(aes(y=InflatedBudget), color = "darkorchid4") + geom_smooth(aes(y=InflatedGross), color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Inflated Budget vs Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
+raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "darkmagenta") + geom_point(aes(y=InflatedGross), color = "darkgreen") + geom_smooth(aes(y=InflatedBudget), color = "darkorchid4") +labs(x = "Year", y = "USD") + geom_smooth(aes(y=InflatedGross), color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Inflated Budget vs Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
@@ -156,7 +156,7 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 plot_1 <- (Avg_Budget_by_Year / Avg_Grossing_by_Year)
 ```
 ## InflatedGross v. InflatedBudget by Year 
-```{r echo=FALSE, fig.height=6, fig.width=7.51}
+```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 plot_1
 ```
 
@@ -211,7 +211,7 @@ genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min
 ```
     
 
-## Genres:Inflated Grossing v. Inflated Budget
+## Genres:Grossing v. Budget
 ```{r echo=FALSE, fig.height=6, fig.width=7.51}
 meanBudget_Genre <- (ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget, fill = genre), stat = "identity") + labs(x = 'Genre', y = 'USD', title = 'Mean Budget per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)))
 
@@ -222,7 +222,7 @@ meanGross_Genre <- (ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, mea
 
 ```
 
-## Female v. Male for Genre Mean Inflated Grossing
+## Female v. Male for Genre 
 ```{r echo=FALSE, fig.height=6, fig.width=7.51}
 genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "Sex", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = Sex)) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings by Sex per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_discrete(labels = c("Female Grossing", "Male Grossing"))
 ```
@@ -282,31 +282,16 @@ raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Apprecia
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
 ```
 ## Enjoyment v. Appreciation
-```{r fig.height=6, fig.width=7.51}
+```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
-ggplot(combined_df,aes(x=genre)) + 
-          geom_bar(aes(y=meanenj),stat="identity",position="dodge",col="blue") +
-          geom_bar(position="dodge") +   
-          geom_bar(aes(y=meanapp),stat="identity",position="dodge",col="red")
 combined_df.long<-melt(combined_df)
 ggplot(combined_df.long,aes(genre,value, fill=variable))+
-     geom_bar(stat="identity",position="dodge")+facet_wrap(~genre)
+     geom_bar(stat="identity",position="dodge")+ theme(axis.text.x = element_text(angle = 60, hjust = 1))+facet_wrap(~genre)
 
 
 ```
 
-## Questions
+## End.  
 
-- Which movies were top rated in appreciation / enjoyment?
-
-- Which genre have the highest appreciation rating? 
-- Which genre have the highest enjoyment rating? 
-which genre cost more to produce? dome
-which genre has the highest income? Which sex contributes more to that income. Mutate each film to multiply ratio by income. Then Summarize by genre = true. Repeat for male so you can see both contributions. 
-**We still have the classical-ness and popularity to mess around with. 
-
-- Gender and how it affects budget. (Which gender contributes more to the gross of each genre- after budge/gross | pink blue)
-apreciation per genre
-enjoyment and genre
 
 
