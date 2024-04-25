@@ -93,8 +93,9 @@ Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fi
 
 ```
 
+```{r include=FALSE}
+
 ## Glimpse(raw_data)
-```{r}
 #To view our data with the new variable.
 glimpse(raw_data)
 ```
@@ -117,6 +118,8 @@ Genre_Count_Plot
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col(fill = "deeppink", color = "black") + labs(x = 'Year', y = 'Film Count', title = 'Film Release Distribution by Year in Dataset') + theme(plot.title = element_text(hjust = 0.5))
 ```
+## Data Limitations
+
 
 ```{r include=FALSE}
 Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point(size = 2.2, color = "darkmagenta") + geom_smooth(color = "darkorchid4")+labs(x = 'Year', y = 'Inflated Budget', title = 'Film Budgets by Year') + theme(plot.title = element_text(hjust = 0.5))
