@@ -88,6 +88,7 @@ Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG), s
 
 
 ```
+
 ## Glimpse(raw_data)
 ```{r}
 #To view our data with the new variable.
@@ -95,81 +96,71 @@ glimpse(raw_data)
 ```
 
 ## Data Analysis 
-
-We'll start by learning about our data has. What is the year range of it? How many films make up our data? How many films of each genere are there? 
 ```{r echo=FALSE}
-#What is the release year range of the films in our dataset?
-range(raw_data$Year)
 
-#How many films make up our dataset?
-print(nrow(raw_data))
+max_year <- max(raw_data$Year)
+min_year <- min(raw_data$Year)
+Year_range <- range(raw_data$Year)
+cat("The year range of our data is ", min_year, "to ", max_year, ".")
+quantity_films <- nrow(raw_data)
 
-#What is the genre distribution of our dataset?
+cat("\nOur dataset is made up of ", quantity_films, " films.")
 Genre_Count_Plot
 ```
-## Movie by Year 
-Does the data contain multiple films per year? Is so, what is the count for each year?
 
+## Film Count by Year 
 ```{r echo=FALSE}
-#Storing the code to the "count_movieby_year" variable.
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col()
 ```
 
-## Average Budget by Year
-```{r echo=FALSE}
-raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
+```{r include=FALSE}
+Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
 ```
 
+## Average Budget by Year
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Avg_Budget_by_Year
+```
 
+```{r include=FALSE}
+Avg_Grossing_by_Year <- raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point() + geom_smooth()
+
+```
 ## Inflated Grossing v. Year
-```{r}
-raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point() + geom_smooth()
-
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Avg_Grossing_by_Year
 ```
 
 ## InflatedGross v. InflatedBudget by Year
-It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+##It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
-
 raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "red") + geom_point(aes(y=InflatedGross), color = "blue") + geom_smooth(aes(y=InflatedBudget), color = "red") + geom_smooth(aes(y=InflatedGross), color = "blue")
-
-
 ```
 
 ## InflatedGross v. InflatedBudget by Year (Side-By-Side)
 
 
 ```{r include=FALSE}
-#we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
-#Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
-
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year, InflatedGross)
+
 ```
-
-
-
-## Genres
-
-Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
-
-```{r}
+# Genres
+```{r message=FALSE, include=FALSE}
+#Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
 raw_data |> slice_max(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
 raw_data |> slice_min(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
 
 ```
 
-
-And what films made the most and least grossing? What genres where these films?
-
-```{r}
+```{r message=FALSE, include=FALSE}
+#And what films made the most and least grossing? What genres were these films?
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
 #still need the genre
 ```
-We know the answers to these questions for indivudual film entries - now we'll answer them for the genre category. 
 
-```{r}
+```{r message=FALSE, include=FALSE}
 #We'll arrange the code to output what we need to see. 
 genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
       cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget),  Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
@@ -193,7 +184,7 @@ genreGrossBudget
 
 
 
-```{r}
+```{r include=FALSE}
 #Over all, what genre cost more to produce on average? How much did that category produce in grossings?
 
 #Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
@@ -201,19 +192,17 @@ genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min
 
 ```
     
-We want to see all of that information in a way that is visually apealing and easy to understand. We'll create a graph. 
 
-```{r}
+## Mean Inflated Grossing v. Mean Inflated Budget for Genres
+```{r echo=FALSE}
 ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget), stat = "identity")
 
 #ggplot for meangross
 ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross), stat = "identity")
 ```
-Mutate to add avg malegross and femalegross. 
 
-```{r}
-#genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
-
+## Female v. Male for Genre Mean Inflated Grossing
+```{r echo=FALSE}
 genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
 ```
 
