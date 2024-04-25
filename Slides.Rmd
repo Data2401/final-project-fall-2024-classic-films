@@ -260,6 +260,17 @@ genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% 
 genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> distinct()
 ```
 
+```{r}
+combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
+ggplot(combined_df,aes(x=genre)) + 
+          geom_bar(aes(y=meanenj),stat="identity",position="dodge",col="blue") +
+          geom_bar(position="dodge") +   
+          geom_bar(aes(y=meanapp),stat="identity",position="dodge",col="red")
+library(reshape2)
+combined_df.long<-melt(combined_df)
+ggplot(combined_df.long,aes(genre,value,fill=variable))+
+     geom_bar(stat="identity",position="dodge")+facet_wrap(~genre)
+```
 
 ## Let see what movie is actually the best. 
 ```{r include=FALSE}
