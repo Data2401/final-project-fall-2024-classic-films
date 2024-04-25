@@ -1,8 +1,9 @@
 ---
-title: "Rough Plan"
+title: "Films"
 author: "Rose Campos, Jessenia Contreras"
 date: "2024-04-04"
 output: powerpoint_presentation
+#reference_doc: Films_raw_theme.pptx
 ---
 
 ```{r setup, include=FALSE}
@@ -10,11 +11,21 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## Introduction
+## Data Introduction
+This data was collected by attendees of the University of Texas at Austin in 2017 for a Journal of Media Psychology publication. The goal of the original source was to determine how enjoyment and appreciation could impact viewers aggregate appraisals. The data used is available for download and review at [Data.World](https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films).
 
-Have you ever seen a film, and thought to yourself "Oh my god! This movie is a masterpiece!" Only to look it up and see a 2.4 IMB rating?
-Through this report, we take a data set of fifty beloved 'popular' films containing a quantitative measure of level of enjoyment, appreciation, and deemed classical-ness to create a comprehensive analysis that takes into account the film's genre and the demographic of viewers. 
-The data we used was gathered from a sample pool of 282 participants of which only 69 where male. The participant pool had an age range of 19 to 37 with the median age range being 22.25. The ethnicity distribution was 39% was Caucasian, 31.5% was Asian, ~13.5% was Hispanic, ~2% was African American, and ~12% Unknown. The remaining percentage is filled by Pacific Islanders and other ethnicity. This data was collected by attendees of the University of Texas at Austin in 2017 for a Journal of Media Psychology publication. The goal of the original source was to determine how enjoyment and appreciation could impact viewers aggregate appraisals. The data used is available for download and review at [Data.World](https://data.world/robertjoellewis/enjoyment-versus-appreciation-ratings-of-50-popular-films).
+* Sample pool: 282 
+  + Only 69 males 
+* Age Distribution: 19 to 37 
+  + Median Age: 22.25 
+* Ethinicity Distribution: 
+  + 39% was Caucasian
+  + 31.5% was Asian
+  + ~13.5% was Hispanic
+  + ~2% was African American
+  + ~12% Unknown
+  + Remaining % Pacific Islanders and other ethnicities
+ 
 
 ## Data Preparation
 
@@ -26,16 +37,11 @@ library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
 
-```
-
-Now, we'll read in the data from its .CSV file into our project and save it to the variable **raw_data**. 
-
-```{r}
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
-glimpse (raw_data)
 ```
-Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. 
+### Cleaning and Mutating Data
+Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. Additionally, we mutated a variable called *Proportion_female* so we could store the female ratio of the sample group for that film. 
 ```{r}
 #To remove "$" and "," from InflatedBudget
 raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget) 
@@ -49,13 +55,12 @@ raw_data$InflatedGross <-  as.numeric(gsub(",","", raw_data$InflatedGross))
 raw_data$TotalGross <-  gsub("\\$","", raw_data$TotalGross) 
 raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
 
-#To View our now changed data. 
-glimpse (raw_data)
-```
-Now, we also see that our data has a *Proportion_male* column. Lets mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
-```{r}
+#Mutating for new column stored in Proportion_female
 raw_data <- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
+```
 
+### Glimpse(raw_data)
+```{r}
 #To view our data with the new variable.
 glimpse(raw_data)
 ```
@@ -286,20 +291,5 @@ which genre has the highest income? Which sex contributes more to that income. M
 - Gender and how it affects budget. (Which gender contributes more to the gross of each genre- after budge/gross | pink blue)
 apreciation per genre
 enjoyment and genre
-
-*Formatting Order*
-#Intro
-#Tidying/Cleaning
-#yEAR$RAWDATA
-#- gENRE Count
-#- Limitations of the data
-#---
-#$vyear 
-#--budget and income
-#--genrevbudget
-#--genrevincome
-#genre v sex
-#genre v grosssex
-#gen enjoyvapreciation
 
 
