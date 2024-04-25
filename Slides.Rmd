@@ -1,9 +1,10 @@
 ---
-title: 'Films'
-author: 'Rose Campos Jessenia Contreras'
-date: '2024'
-output: powerpoint_presentation: 
-reference_doc: Test.pptx
+title: "Films"
+author: "Rose Campos Jessenia Contreras"
+date: "2024"
+output: 
+  powerpoint_presentation:
+    reference_doc: Test.pptx
 ---
 
 ```{r setup, include=FALSE}
@@ -261,7 +262,7 @@ genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> d
 
 
 ## Let see what movie is actually the best. 
-```{r eval=FALSE, include=FALSE}
+```{r include=FALSE}
 raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
 
 raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Appreciation)
