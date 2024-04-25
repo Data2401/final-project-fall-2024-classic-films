@@ -38,27 +38,29 @@ library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
 library(gridExtra) #Loaded to arrange plots
-library(yaml) #Loaded to knit as custom .pptx template
-library(devtools) #Loaded for patchwork
-library(patchwork) #Loaded to organize plots 
-library(reshape2) # Loaded to
+library(yaml)
+library(patchwork)
+library(reshape2)
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
 ```
 
 ## Cleaning and Mutating Data
+
 Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. Additionally, we mutated a variable called *Proportion_female* so we could store the female ratio of the sample group for that film. 
-+
-```{r}
+```{r message=FALSE, warning=FALSE}
 #To remove "$" and "," from InflatedBudget
 raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget) 
 raw_data$InflatedBudget <-  as.numeric(gsub(",","", raw_data$InflatedBudget))
+
 #To remove "$" and "," from InflatedGross
 raw_data$InflatedGross <-  gsub("\\$","", raw_data$InflatedGross) 
 raw_data$InflatedGross <-  as.numeric(gsub(",","", raw_data$InflatedGross))
+
 #To remove "$" and "," from TotalGross
 raw_data$TotalGross <-  gsub("\\$","", raw_data$TotalGross) 
 raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
+
 #Mutating for new column stored in Proportion_female
 raw_data <- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
 ```
@@ -93,45 +95,40 @@ Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fi
 
 ```
 
-```{r include=FALSE}
 
-## Glimpse(raw_data)
+```{r include=FALSE}
 #To view our data with the new variable.
 glimpse(raw_data)
 ```
 
-## Data Analysis 
-```{r echo=FALSE, fig.height=6, fig.width=7.51}
+```{r include=FALSE}
 
 max_year <- max(raw_data$Year)
 min_year <- min(raw_data$Year)
 Year_range <- range(raw_data$Year)
+cat("The year range of our data is ", min_year, "to ", max_year, ".")
 quantity_films <- nrow(raw_data)
-#cat("The year range of our data is ", min_year, "to ", max_year, ".")
-#cat("\nOur dataset is made up of ", quantity_films, " films.")
 
+cat("\nOur dataset is made up of ", quantity_films, " films.")
+```
+
+## Data Analysis 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 Genre_Count_Plot
 ```
 
 ## Film Count by Year 
-```{r echo=FALSE, fig.height=6, fig.width=7.51}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col(fill = "deeppink", color = "black") + labs(x = 'Year', y = 'Film Count', title = 'Film Release Distribution by Year in Dataset') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-## Data Limitations
-* Limitation do
-* Lim 2
-  + Sub
-  + Sub
-* Sub
-
 ```{r include=FALSE}
-Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point(size = 2.2, color = "darkmagenta") + geom_smooth(color = "darkorchid4")+labs(x = 'Year', y = 'Inflated Budget', title = 'Film Budgets by Year') + theme(plot.title = element_text(hjust = 0.5))
+Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point(size = 2.2, color = "darkmagenta") + geom_smooth(color = "darkorchid4")+labs(x = 'Year', y = 'USD', title = 'Film Budgets by Year') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## Inflated Budget by Year
-```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 Avg_Budget_by_Year
 ```
 
@@ -140,24 +137,26 @@ Avg_Grossing_by_Year <- raw_data |> group_by(Year) |> summarise(InflatedGross) |
 
 ```
 ## Inflated Grossing v. Year
-```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 Avg_Grossing_by_Year
 ```
 
 ## InflatedGross v. InflatedBudget by Year
-```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ##It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
 raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "darkmagenta") + geom_point(aes(y=InflatedGross), color = "darkgreen") + geom_smooth(aes(y=InflatedBudget), color = "darkorchid4") +labs(x = "Year", y = "USD") + geom_smooth(aes(y=InflatedGross), color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Inflated Budget vs Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
-```{r echo=FALSE, message=TRUE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 plot_1 <- (Avg_Budget_by_Year / Avg_Grossing_by_Year)
+
 ```
 ## InflatedGross v. InflatedBudget by Year 
 ```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 plot_1
+
 ```
 
 ```{r include=FALSE}
@@ -178,7 +177,7 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
 #still need the genre
 ```
 
-```{r message=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 #We'll arrange the code to output what we need to see. 
 genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
       cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget),  Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
@@ -202,7 +201,7 @@ genreGrossBudget
 
 
 
-```{r include=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 #Over all, what genre cost more to produce on average? How much did that category produce in grossings?
 
 #Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
@@ -211,19 +210,20 @@ genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min
 ```
     
 
+
 ## Genres:Grossing v. Budget
-```{r echo=FALSE, fig.height=6, fig.width=7.51}
+```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 meanBudget_Genre <- (ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget, fill = genre), stat = "identity") + labs(x = 'Genre', y = 'USD', title = 'Mean Budget per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)))
 
-meanGross_Genre <- (ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross, fill = genre), stat = "identity", show.legend = FALSE) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)))
+meanGross_Genre <- ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross, fill = genre), stat = "identity", show.legend = FALSE) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
 
-(meanBudget_Genre + meanGross_Genre)
-#grid.arrange(meanBudget_Genre, meanGross_Genre, nrow = 1)
+grid.arrange(meanBudget_Genre, meanGross_Genre, nrow = 1)
 
 ```
 
+
 ## Female v. Male for Genre 
-```{r echo=FALSE, fig.height=6, fig.width=7.51}
+```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "Sex", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = Sex)) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings by Sex per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_discrete(labels = c("Female Grossing", "Male Grossing"))
 ```
 
@@ -274,6 +274,7 @@ genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% 
 genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> distinct()
 ```
 
+
 ```{r include=FALSE}
 raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
 
@@ -281,6 +282,7 @@ raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Apprecia
 
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
 ```
+
 ## Enjoyment v. Appreciation
 ```{r echo=FALSE, fig.height=6, fig.width=7.51, message=FALSE, warning=FALSE}
 combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
@@ -292,6 +294,7 @@ ggplot(combined_df.long,aes(genre,value, fill=variable))+
 ```
 
 ## End.  
+
 
 
 
