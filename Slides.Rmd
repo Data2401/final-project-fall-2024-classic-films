@@ -1,9 +1,9 @@
 ---
-title: "Films"
-author: "Rose Campos, Jessenia Contreras"
-date: "2024-04-04"
+title: 'Films'
+author: 'Rose Campos Jessenia Contreras'
+date: '2024'
 output: powerpoint_presentation: 
-reference_doc: Films_raw_theme.pptx
+reference_doc: Test.pptx
 ---
 
 ```{r setup, include=FALSE}
@@ -37,6 +37,7 @@ library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
 library(gridExtra) #Loaded to arrange plots
+library(yaml)
 
 ##Read in data and save it to variable raw_data
 raw_data <- read.csv(file = "popular_film_data.csv")
@@ -212,8 +213,8 @@ genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "Sex",
 ```
 
 
-###T
-```{r}
+
+```{r include=FALSE}
 #genre enjoyment
 genre_enj <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanenj = mean(Enjoyment))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanenj = mean(Enjoyment))),
@@ -236,7 +237,7 @@ genre_enj |> slice(which(meanenj ==max(meanenj) | meanenj == min(meanenj))) |> d
 
 ```
 
-```{r}
+```{r include=FALSE}
 #genre appreaction
 genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanapp = mean(Appreciation))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanapp = mean(Appreciation))),
@@ -259,8 +260,8 @@ genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> d
 ```
 
 
-Let see what movie is actually the best. 
-```{r}
+## Let see what movie is actually the best. 
+```{r eval=FALSE, include=FALSE}
 raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
 
 raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Appreciation)
