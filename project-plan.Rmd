@@ -1,5 +1,5 @@
 ---
-title: "Rough Plan"
+title: "Films"
 author: "Rose Campos, Jessenia Contreras"
 date: "2024-04-04"
 output: html_document
@@ -20,11 +20,15 @@ The data we used was gathered from a sample pool of 282 participants of which on
 
 Below, we load in the packages we'll be using to analyse our data.  
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 #Packages loading to use
 library(tidyverse) ##Loaded for dplyr and to 'clean' data
 library(ggplot2) ##Loaded for plotting
 library(dplyr) ##Loaded for computer issues
+library(gridExtra) #Loaded to arrange plots
+library(yaml)
+library(patchwork)
+library(reshape2)
 
 ```
 
@@ -35,7 +39,10 @@ Now, we'll read in the data from its .CSV file into our project and save it to t
 raw_data <- read.csv(file = "popular_film_data.csv")
 glimpse (raw_data)
 ```
-Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. 
+
+## Cleaning and Mutating Data
+
+Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. Additionally, we mutated a variable called *Proportion_female* so we could store the female ratio of the sample group for that film. 
 ```{r}
 #To remove "$" and "," from InflatedBudget
 raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget) 
@@ -54,28 +61,52 @@ glimpse (raw_data)
 ```
 Now, we also see that our data has a *Proportion_male* column. Lets mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
 ```{r}
+#Mutating for new column stored in Proportion_female
 raw_data <- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
 
 #To view our data with the new variable.
 glimpse(raw_data)
 ```
+
 ## Data Analysis 
 
-- Uncover new information in the data that isn’t immediately apparent (such as: don’t just plot the data as is, but filter or group the data in
-different ways, create new variables, or join different data frames together to get new summaries)
-- Provide your findings in plots or tables. Display findings in different ways.
-- Graphs all have purpose and help tell your story. Make sure you have a graph that illustrates your primary point and that they are all
-appropriately formatted (plot and axis titles, legends if needed, appropriate plot types used)
-- Use tables effectively to perform comparisons, highlighting important features.
-- Your analysis should be thoroughly, yet concisely, explained. Make sure your insights and discoveries are highlighted, and easy to see and
-understand
 
-We'll start by learning about our data has. What is the year range of it? How many films make up our data? How many films of each genere are there? 
+We'll start by learning about our data has. What is the year range of it? How many films make up our data? 
 ```{r}
 #What is the release year range of the films in our dataset?
 range(raw_data$Year)
 
+#How many entries make up our dataset?
+quantity_films <- nrow(raw_data)
+quantity_films
 ```
+How many films of each genre are there? 
+```{r}
+genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
+    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
+    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sumG = sum(Western == 1))),
+    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sumG = sum(Action == 1))),
+    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sumG = sum(Biography == 1))),
+    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sumG = sum(History == 1))),
+    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sumG = sum(Adventure == 1))),
+    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sumG = sum(Fantasy == 1))),
+    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sumG = sum(Mystery == 1))),
+    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sumG = sum(SciFi == 1))),
+    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sumG = sum(Romance == 1))),
+    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sumG = sum(Thriller == 1))),
+    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sumG = sum(Crime == 1))),
+    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sumG = sum(War == 1))),
+    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sumG = sum(Family == 1))),
+    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sumG = sum(Animation == 1))))%>% arrange(desc(sumG))
+
+genre_total
+```
+
+To make this information more visual, we'll plot it below.
+```{r}
+Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fill = genre), stat = "identity", position = "dodge") + labs(x = 'Genres', y = 'Genre Count', title = 'Genre Distribution in Dataset') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
+```
+
 Does the data contain multiple films per year? Is so, what is the count for each year? 
 ```{r}
  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
@@ -87,20 +118,26 @@ The above is arranged by to be descending by amount of movies present of each ye
 #Storing the code to the "count_movieby_year" variable. 
 
 count_movieby_year <-  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
-ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col()
+ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col(fill = "deeppink", color = "black") + labs(x = 'Year', y = 'Film Count', title = 'Film Release Distribution by Year in Dataset') + theme(plot.title = element_text(hjust = 0.5))
+
 ```
+
 Notice the distribution of the films in the data. Out of 50 films, only 11 are pre-1990's while the remaining majority are from the early 1990's to the late 2010's. Keep in mind that this uneven distribution of films might impact the conclusions drawn from the data. 
 
 Next, we wanted to find the average budget for each year. We want to see if the year had an impact on the budget. 
 ```{r}
-raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point() + geom_smooth()
+Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point(size = 2.2, color = "darkmagenta") + geom_smooth(color = "darkorchid4")+labs(x = 'Year', y = 'USD', title = 'Film Budgets by Year') + theme(plot.title = element_text(hjust = 0.5))
+
+Avg_Budget_by_Year
 ```
 
 From the graph we can see there is a trend. The graphs tell us that the closer we get to right side of the graph(closer to the year 2013), the budget have increase. There is a rapid increase from the year 1990's to the year 2010's.
 
 Now we want to see, if what the relation is between a films budget and gross income. First we focus on the plotting the *InflatedGross* income. 
 ```{r}
-raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point() + geom_smooth()
+Avg_Grossing_by_Year <- raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point(size = 2.2, color = "darkgreen") + geom_smooth(color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Film Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
+
+Avg_Grossing_by_Year
 
 ```
 
@@ -109,14 +146,16 @@ It's a little hard to compare the *InflatedGross* income and the *InflatedBudget
 ```{r}
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
 
-raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "red") + geom_point(aes(y=InflatedGross), color = "blue") + geom_smooth(aes(y=InflatedBudget), color = "red") + geom_smooth(aes(y=InflatedGross), color = "blue")
-
+raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "darkmagenta") + geom_point(aes(y=InflatedGross), color = "darkgreen") + geom_smooth(aes(y=InflatedBudget), color = "darkorchid4") +labs(x = "Year", y = "USD") + geom_smooth(aes(y=InflatedGross), color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Inflated Budget vs Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
 
 ```
 
-Given that the y-axis is going by much larger facter than what the *InflatedBudget is going by 
-
-we can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
+The graph is not wrong, but rather both variables have a difference of ... Let's arrange these graphs separatly so we can make the comparison more accurate. 
+```{r}
+plot_1 <- (Avg_Budget_by_Year / Avg_Grossing_by_Year)
+plot_1
+```
+We can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
 Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
 
 ```{r}
@@ -124,20 +163,14 @@ raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year, InflatedG
 ```
 
 
-BLAH BLAH, GO OVER RELATIONSHIP WITH GRAPH. 
-
-###Genres
-
 Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
 
 ```{r}
 raw_data |> slice_max(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
 raw_data |> slice_min(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
-
 ```
 
-
-And what films made the most and least grossing? What genres where these films?
+What films made the most and least grossings? What genres were these films?
 
 ```{r}
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
@@ -167,64 +200,32 @@ genreGrossBudget
 
 ```
 
-
+#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
 
 ```{r}
-#Over all, what genre cost more to produce on average? How much did that category produce in grossings?
-
-#Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
 genreGrossBudget |> slice(which(meanBudget ==max(meanBudget) | meanBudget == min(meanBudget))) |> distinct()
-
 ```
     
-We want to see all of that information in a way that is visually apealing and easy to understand. We'll create a graph. 
+We want to see all of that information in a way that is visually apealing and easy to understand. We'll create a graphs for each of these and arrange them side-by-side.  
 
 ```{r}
-ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget), stat = "identity")
+meanBudget_Genre <- (ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meanBudget, fill = genre), stat = "identity") + labs(x = 'Genre', y = 'USD', title = 'Mean Budget per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)))
 
-#ggplot for meangross
-ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross), stat = "identity")
+meanGross_Genre <- ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, meangross, fill = genre), stat = "identity", show.legend = FALSE) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
+
+grid.arrange(meanBudget_Genre, meanGross_Genre, nrow = 1)
 ```
-Mutate to add avg malegross and femalegross. 
 
+Now we'll plot each genre, and their grossings by sex.
 ```{r Plotting sex proportion w/  meangross}
 #genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
 
-genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "gender", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = gender))
+genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "Sex", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = Sex)) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings by Sex per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_discrete(labels = c("Female Grossing", "Male Grossing"))
 ```
 
-For transparency s sake, its also important to note how many films under each genre make up the dataset
+Enjoyment is classified as... Below, we'll plot the rated enjoyment by genre. 
 ```{r}
 
-genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
-    cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
-    cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(sumG = sum(Western == 1))),
-    cbind(genre = "Action", raw_data %>% filter(Action == 1) %>% summarise(sumG = sum(Action == 1))),
-    cbind(genre = "Biography", raw_data %>% filter(Biography == 1) %>% summarise(sumG = sum(Biography == 1))),
-    cbind(genre = "History", raw_data %>% filter(History == 1) %>% summarise(sumG = sum(History == 1))),
-    cbind(genre = "Adventure", raw_data %>% filter(Adventure == 1) %>% summarise(sumG = sum(Adventure == 1))),
-    cbind(genre = "Fantasy", raw_data %>% filter(Fantasy == 1) %>% summarise(sumG = sum(Fantasy == 1))),
-    cbind(genre = "Mystery", raw_data %>% filter(Mystery == 1) %>% summarise(sumG = sum(Mystery == 1))),
-    cbind(genre = "SciFi", raw_data %>% filter(SciFi == 1) %>% summarise(sumG = sum(SciFi == 1))),
-    cbind(genre = "Romance", raw_data %>% filter(Romance == 1) %>% summarise(sumG = sum(Romance == 1))),
-    cbind(genre = "Thriller", raw_data %>% filter(Thriller == 1) %>% summarise(sumG = sum(Thriller == 1))),
-    cbind(genre = "Crime", raw_data %>% filter(Crime == 1) %>% summarise(sumG = sum(Crime == 1))),
-    cbind(genre = "War", raw_data %>% filter(War == 1) %>% summarise(sumG = sum(War == 1))),
-    cbind(genre = "Family", raw_data %>% filter(Family == 1) %>% summarise(sumG = sum(Family == 1))),
-    cbind(genre = "Animation", raw_data %>% filter(Animation == 1) %>% summarise(sumG = sum(Animation == 1))))%>% arrange(desc(sumG))
-
-genre_total
-#the end of numbers of genre
-
-#ggplot(genre_total) + geom_histogram(mapping = aes(x = (genre_total$stat = "count"), stat = "identity"))+ geom_histogram(bins = 15)
-#ggplot(genre_total, aes(x = (genre_total$stat = "count"), stat = "identity") + geom_histogram(bins = 15))
-ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG), stat = "identity")
-
-
-```
-###T
-```{r}
-#genre enjoyment
 genre_enj <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanenj = mean(Enjoyment))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanenj = mean(Enjoyment))),
     cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(meanenj = mean(Enjoyment))),
@@ -246,8 +247,8 @@ genre_enj |> slice(which(meanenj ==max(meanenj) | meanenj == min(meanenj))) |> d
 
 ```
 
+Apreciation is classified as ... Below, we'll plot apreciation by genre. 
 ```{r}
-#genre appreaction
 genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanapp = mean(Appreciation))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanapp = mean(Appreciation))),
     cbind(genre = "Western", raw_data %>% filter(Western == 1) %>% summarise(meanapp = mean(Appreciation))),
@@ -269,7 +270,6 @@ genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> d
 ```
 
 
-Let see what movie is actually the best. 
 ```{r}
 raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
 
@@ -278,34 +278,14 @@ raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Apprecia
 raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
 ```
 
+We'll now compare enjoyment and appreciation by genre. 
+```{r}
+combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
+combined_df.long<-melt(combined_df)
+ggplot(combined_df.long,aes(genre,value, fill=variable))+
+     geom_bar(stat="identity",position="dodge")+ theme(axis.text.x = element_text(angle = 60, hjust = 1))+facet_wrap(~genre)
 
-## Questions
+```
 
-- Which movies were top rated in appreciation / enjoyment?
-
-- Which genre have the highest appreciation rating? 
-- Which genre have the highest enjoyment rating? 
-which genre cost more to produce? dome
-which genre has the highest income? Which sex contributes more to that income. Mutate each film to multiply ratio by income. Then Summarize by genre = true. Repeat for male so you can see both contributions. 
-**We still have the classical-ness and popularity to mess around with. 
-
-- Gender and how it affects budget. (Which gender contributes more to the gross of each genre- after budge/gross | pink blue)
-apreciation per genre
-enjoyment and genre
-
-*Formatting Order*
-#Intro
-#Tidying/Cleaning
-#yEAR$RAWDATA
-- gENRE Count
-- Limitations of the data
----
-$vyear 
---budget and income
---genrevbudget
---genrevincome
-genre v sex
-genre v grosssex
-gen enjoyvapreciation
 
 
