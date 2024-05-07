@@ -42,7 +42,7 @@ glimpse (raw_data)
 
 ## Cleaning and Mutating Data
 
-Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and and ",". These symbols cause the the information in them to be read as characters rather then as integers. We use gsub to remove these symbols. Additionally, we mutated a variable called *Proportion_female* so we could store the female ratio of the sample group for that film. 
+Some of the data contained in the the variables *InflatedBudget*, *InflatedGross*, and *TotalGross* have symbols such as "$" and  ",". These symbols cause the the information in them to be read as characters rather than as integers. We use gsub to remove these symbols.
 ```{r}
 #To remove "$" and "," from InflatedBudget
 raw_data$InflatedBudget <-  gsub("\\$","", raw_data$InflatedBudget) 
@@ -59,7 +59,7 @@ raw_data$TotalGross <-  as.numeric(gsub(",","", raw_data$TotalGross))
 #To View our now changed data. 
 glimpse (raw_data)
 ```
-Now, we also see that our data has a *Proportion_male* column. Lets mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
+Now, we also see that our data has a *Proportion_male* column. Let's mutate that so we can also see the female ratio and store it in the variable *Proportion_female*.
 ```{r}
 #Mutating for new column stored in Proportion_female
 raw_data <- raw_data |> mutate (Proportion_female = (1 - Proportion_male))
@@ -70,7 +70,6 @@ glimpse(raw_data)
 
 ## Data Analysis 
 
-
 We'll start by learning about our data has. What is the year range of it? How many films make up our data? 
 ```{r}
 #What is the release year range of the films in our dataset?
@@ -80,7 +79,7 @@ range(raw_data$Year)
 quantity_films <- nrow(raw_data)
 quantity_films
 ```
-We wanted to learn more about the films. First we are looking into, How many films of each genre are there? 
+We wanted to learn more about the films. First we are looking into how many films of each genre there are? 
 ```{r}
 genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
@@ -104,15 +103,17 @@ genre_total
 
 To make this information more visual, we'll plot it below.
 ```{r}
-Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fill = genre), stat = "identity", position = "dodge") + labs(x = 'Genres', y = 'Genre Count', title = 'Genre Distribution in Dataset') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
+Genre_Count_Plot <- ggplot(genre_total) + geom_bar(mapping = aes(genre, sumG, fill = genre), stat = "identity", position = "dodge", show.legend = FALSE) + labs(x = 'Genres', y = 'Genre Count', title = 'Genre Distribution in Dataset') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5))
+Genre_Count_Plot
 ```
+Clearly, most of the entries in our dataset are of adventure films, and drama films. There isn't an even distribution of the genres in the dataset - this might skewer the remaining of our analysis towards this those genres. Another thing to keep in mind is that each film can have more than one genre. 
 
-Does the data contain multiple films per year? Is so, what is the count for each year? 
+Now, we'll look at the year disturbution of our film entries. Does the data contain multiple films per year? Is so, what is the count for each year? 
 ```{r}
  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 
 ```
-The above is arranged by to be descending by amount of movies present of each year but it is difficult to see this overall. To give visibility to this distribution we create a plot based on the above coding. First we save it to a variable. 
+The above is arranged by to be descending by amount of movies present of each year but it is difficult to see this overall. To give visibility to this distribution we create a plot based on the above. First, we save it to a variable. 
 
 ```{r}
 #Storing the code to the "count_movieby_year" variable. 
