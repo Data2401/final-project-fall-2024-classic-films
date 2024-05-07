@@ -80,7 +80,7 @@ range(raw_data$Year)
 quantity_films <- nrow(raw_data)
 quantity_films
 ```
-How many films of each genre are there? 
+We wanted to learn more about the films. First we are looking into, How many films of each genre are there? 
 ```{r}
 genre_total <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(sumG = sum(Comedy == 1))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(sumG = sum(Drama == 1))),
@@ -150,33 +150,33 @@ raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudge
 
 ```
 
-The graph is not wrong, but rather both variables have a difference of ... Let's arrange these graphs separatly so we can make the comparison more accurate. 
+The graph is not wrong, but rather both variables have a difference of millions of dollars.Concerns about the visual data might being misdirect.To prevent that the graph was arrange separately so we can make the comparison more accurate. 
 ```{r}
 plot_1 <- (Avg_Budget_by_Year / Avg_Grossing_by_Year)
 plot_1
 ```
-We can tell from this graph that companies put a lot of money in to production of the movie but they don"t make that money back. 
-Now let get a closer look on which years actually made the most money. This data will be use later to compare which movie is the best. 
+
+Since the graphs are now separate from each other, we can see the data in more details. We can tell the difference in each category more clearly. 
+
+We can tell from this graph that companies put a lot of money in to production of the movie but they don't make that money back. 
+Now let get a closer look on which years actually made the most money.
+
+First we wanted to see which year had the highest budget.
 
 ```{r}
-raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year, InflatedGross)
+raw_data |> slice_max(InflatedBudget, n = 10) |> select(FilmName, Year, InflatedGross)
 ```
 
-
-Is there a specific genre that costs more to produce? First, we'll see what the most and least expensive films to produce where.
+Then we wanted to look for the year the had the highest Gross.
 
 ```{r}
-raw_data |> slice_max(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
-raw_data |> slice_min(InflatedBudget, n = 1) |> select(FilmName, InflatedGross)
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, Year,InflatedGross)
 ```
 
-What films made the most and least grossings? What genres were these films?
+From this data we can confirm that the movies with the highest budget doesn't mean that it will make the highest gross.
 
-```{r}
-raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross)
-#still need the genre
-```
-We know the answers to these questions for indivudual film entries - now we'll answer them for the genre category. 
+We know the answers to these questions for individual film entries - now we'll answer them for the genre category. 
+Here we are looking at the budget,gross, female proportions and the male proportions.
 
 ```{r Arranging code for genre manipulation}
 #We'll arrange the code to output what we need to see. 
@@ -200,6 +200,7 @@ genreGrossBudget
 
 ```
 
+
 #Over all, what genre cost more to produce on average? How much did that category produce in grossing? 
 
 ```{r}
@@ -216,14 +217,14 @@ meanGross_Genre <- ggplot(genreGrossBudget) + geom_bar(mapping = aes(genre, mean
 grid.arrange(meanBudget_Genre, meanGross_Genre, nrow = 1)
 ```
 
-Now we'll plot each genre, and their grossings by sex.
+Now we'll plot each genre, and their grossing by sex. We visually want to see if there was a distinction between sex by genres. Since most of our participants was mostly females. 
 ```{r Plotting sex proportion w/  meangross}
 #genreGrossBudget <- genreGrossBudget |> mutate ( Gross_Female = (as.numeric(genreGrossBudget$meangross) * as.numeric(raw_data$Proportion_female)))
 
 genreGrossBudget |> pivot_longer(cols = ends_with("alegross"), names_to = "Sex", values_to = "proportion") |> ggplot() + geom_col(aes(x = genre, y = proportion, fill = Sex)) + labs(x = 'Genre', y = 'USD', title = 'Mean Grossings by Sex per Genre') + theme(axis.text.x = element_text(angle = 60, hjust = 1)) + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_discrete(labels = c("Female Grossing", "Male Grossing"))
 ```
 
-Enjoyment is classified as... Below, we'll plot the rated enjoyment by genre. 
+Enjoyment is classified as how much the participants enjoy the film. Below, we'll plot the rated enjoyment by genre. Then we look for the genre that was most/least enjoyable by the participants.
 ```{r}
 
 genre_enj <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanenj = mean(Enjoyment))),
@@ -247,7 +248,7 @@ genre_enj |> slice(which(meanenj ==max(meanenj) | meanenj == min(meanenj))) |> d
 
 ```
 
-Apreciation is classified as ... Below, we'll plot apreciation by genre. 
+Appreciation is classified as how much the participants appreciate the films. Below, we'll plot appreciation by genre.  Then we look for the genre that was most/least appreciate by the participants.
 ```{r}
 genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meanapp = mean(Appreciation))),
     cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meanapp = mean(Appreciation))),
@@ -268,17 +269,8 @@ genre_app <- rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% 
 
 genre_app |> slice(which(meanapp ==max(meanapp) | meanapp == min(meanapp))) |> distinct()
 ```
+We'll now visually compare enjoyment and appreciation by genre.
 
-
-```{r}
-raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
-
-raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Appreciation)
-
-raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
-```
-
-We'll now compare enjoyment and appreciation by genre. 
 ```{r}
 combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
 combined_df.long<-melt(combined_df)
@@ -288,4 +280,20 @@ ggplot(combined_df.long,aes(genre,value, fill=variable))+
 ```
 
 
+Lastly we are comparing the top appreciation/enjoyment to the top gross.
+
+```{r}
+raw_data |> slice_max(Appreciation, n = 10)|> select(FilmName,Appreciation, Enjoyment)
+
+raw_data |> slice_max(Enjoyment, n = 10) |> select(FilmName, Enjoyment, Appreciation)
+
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
+```
+
+We can see that the top appreciation have different films compare to the top enjoyment. Now we want to see if any of the films from our finding will differentiate from the top gross category. 
+
+```{r}
+raw_data |> slice_max(InflatedGross, n = 10) |> select(FilmName, InflatedGross, Appreciation, Enjoyment)
+```
+The top gross film was Titanic which place 5th in the appreciation top 10 but not in enjoyment top 10. In conclusion gross doesn't mean that it will be the best film. It just mean that it made the most money. Just watch the films that you enjoy and appreciate. Its all opinions anyways. 
 
