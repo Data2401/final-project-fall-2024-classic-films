@@ -108,7 +108,7 @@ Genre_Count_Plot
 ```
 Clearly, most of the entries in our dataset are of adventure films, and drama films. There isn't an even distribution of the genres in the dataset - this might skewer the remaining of our analysis towards this those genres. Another thing to keep in mind is that each film can have more than one genre. 
 
-Now, we'll look at the year disturbution of our film entries. Does the data contain multiple films per year? Is so, what is the count for each year? 
+Now, we'll look at the year distribution of our film entries. Does the data contain multiple films per year? Is so, what is the count for each year? 
 ```{r}
  raw_data|>group_by(Year) |> summarise(Movie_Count = n()) |> arrange(desc(Movie_Count))
 
@@ -126,16 +126,16 @@ ggplot(count_movieby_year, aes(x = Year, y = Movie_Count)) + geom_col(fill = "de
 Notice the distribution of the films in the data. Out of 50 films, only 11 are pre-1990's while the remaining majority are from the early 1990's to the late 2010's. Keep in mind that this uneven distribution of films might impact the conclusions drawn from the data. 
 
 Next, we wanted to find the average budget for each year. We want to see if the year had an impact on the budget. 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 Avg_Budget_by_Year <- raw_data |> group_by(Year)|> summarise(InflatedBudget) |> ggplot(aes(Year,InflatedBudget)) +geom_point(size = 2.2, color = "darkmagenta") + geom_smooth(color = "darkorchid4")+labs(x = 'Year', y = 'USD', title = 'Film Budgets by Year') + theme(plot.title = element_text(hjust = 0.5))
 
 Avg_Budget_by_Year
 ```
 
-From the graph we can see there is a trend. The graphs tell us that the closer we get to right side of the graph(closer to the year 2013), the budget have increase. There is a rapid increase from the year 1990's to the year 2010's.
+From the graph we can see there is a trend. The graphs tell us that the closer we get to the present the budget increases for films. There is a rapid increase in budgets from the year 1990's to the year 2010's.
 
 Now we want to see, if what the relation is between a films budget and gross income. First we focus on the plotting the *InflatedGross* income. 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 Avg_Grossing_by_Year <- raw_data |> group_by(Year) |> summarise(InflatedGross) |> ggplot(aes(Year,InflatedGross)) +geom_point(size = 2.2, color = "darkgreen") + geom_smooth(color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Film Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
 
 Avg_Grossing_by_Year
@@ -144,15 +144,15 @@ Avg_Grossing_by_Year
 
 It's a little hard to compare the *InflatedGross* income and the *InflatedBudget* in two graphs so lets display this information together so we can analyse it. 
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 #raw_data |> group_by(Year)|> ggplot(aes(Year,InflatedGross, InflatedBudget, color = )) +geom_point() + geom_smooth(method = 'loess', formula = 'y~x')
 
 raw_data |> group_by(Year) |> ggplot(aes(x=Year))+geom_point(aes(y=InflatedBudget),color = "darkmagenta") + geom_point(aes(y=InflatedGross), color = "darkgreen") + geom_smooth(aes(y=InflatedBudget), color = "darkorchid4") +labs(x = "Year", y = "USD") + geom_smooth(aes(y=InflatedGross), color = "darkslategray") + labs(x = 'Year', y = 'USD', title = 'Inflated Budget vs Inflated Grossins per Year') + theme(plot.title = element_text(hjust = 0.5))
 
 ```
 
-The graph is not wrong, but rather both variables have a difference of millions of dollars.Concerns about the visual data might being misdirect.To prevent that the graph was arrange separately so we can make the comparison more accurate. 
-```{r}
+The graph is not wrong, but both variables have a different y-scale, with the difference being of millions of dollars. Due to this difference we can't see how the budget changes with the years. To overcome this, we'll stack the plots. 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 plot_1 <- (Avg_Budget_by_Year / Avg_Grossing_by_Year)
 plot_1
 ```
@@ -179,7 +179,7 @@ From this data we can confirm that the movies with the highest budget doesn't me
 We know the answers to these questions for individual film entries - now we'll answer them for the genre category. 
 Here we are looking at the budget,gross, female proportions and the male proportions.
 
-```{r Arranging code for genre manipulation}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 #We'll arrange the code to output what we need to see. 
 genreGrossBudget <- (rbind(cbind(genre = "Comedy", raw_data %>% filter(Comedy == 1) %>% summarise(meangross = mean(InflatedGross), meanBudget = mean(InflatedBudget), Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
       cbind(genre = "Drama", raw_data %>% filter(Drama == 1) %>% summarise(meangross = mean(InflatedGross),meanBudget = mean(InflatedBudget),  Male_Proportion = Proportion_male, Female_Proportion = Proportion_female, Femalegross = ((mean(Proportion_female))*meangross), Malegross = ((mean(Proportion_male))*meangross))),
@@ -275,8 +275,10 @@ We'll now visually compare enjoyment and appreciation by genre.
 ```{r}
 combined_df <- merge(genre_app, genre_enj, by="genre", all=TRUE)
 combined_df.long<-melt(combined_df)
+
 ggplot(combined_df.long,aes(genre,value, fill=variable))+
      geom_bar(stat="identity",position="dodge")+ theme(axis.text.x = element_text(angle = 60, hjust = 1))+facet_wrap(~genre)
+
 
 ```
 
